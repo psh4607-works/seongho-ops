@@ -1,0 +1,40 @@
+{
+  "name": "seongho-ops",
+  "version": "0.1.0",
+  "description": "Personal operational CLI utilities and Codex CLI-routing skill.",
+  "type": "module",
+  "private": false,
+  "license": "MIT",
+  "author": {
+    "name": "Seongho",
+    "url": "https://github.com/psh4607"
+  },
+  "homepage": "https://github.com/psh4607/seongho-ops",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psh4607/seongho-ops.git"
+  },
+  "bin": {
+    "k": "plugins/seongho-ops/bin/k.js"
+  },
+  "files": [
+    ".agents",
+    "plugins",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup && chmod +x plugins/seongho-ops/bin/*.js",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "pnpm run typecheck && pnpm run build && node --test"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.5.0"
+  }
+}

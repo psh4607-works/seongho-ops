@@ -1,0 +1,40 @@
+{
+  "name": "seongho-ops",
+  "version": "0.1.0",
+  "description": "Routes operational work to purpose-built local CLIs and packages Seongho's port cleanup utility.",
+  "author": {
+    "name": "Seongho",
+    "url": "https://github.com/psh4607"
+  },
+  "homepage": "https://github.com/psh4607/seongho-ops",
+  "repository": "https://github.com/psh4607/seongho-ops",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "cli",
+    "operations",
+    "routing",
+    "developer-tools"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Seongho Ops",
+    "shortDescription": "Route operational CLI work and provide the k port cleanup command.",
+    "longDescription": "Seongho Ops selects the correct authenticated local CLI for external services, infrastructure, databases, deployments, observability, browser QA, runtimes, and state-changing Git work. It also bundles the k command for force-stopping processes that own explicitly requested local ports.",
+    "developerName": "Seongho",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Local CLI",
+      "Authentication recovery",
+      "Process management"
+    ],
+    "websiteURL": "https://github.com/psh4607/seongho-ops",
+    "brandColor": "#334155",
+    "defaultPrompt": [
+      "Use the correct local CLI for this operational task.",
+      "Diagnose this CLI authentication failure safely.",
+      "Free this local port with the bundled k command."
+    ]
+  }
+}
