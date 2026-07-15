@@ -1,6 +1,6 @@
 {
   "name": "seongho-ops",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Personal operational CLI utilities and Codex CLI-routing skill.",
   "type": "module",
   "private": false,

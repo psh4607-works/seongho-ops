@@ -1,6 +1,6 @@
 {
   "name": "seongho-ops",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Routes operational work to purpose-built local CLIs and packages Seongho's port cleanup utility.",
   "author": {
     "name": "Seongho",
@@ -30,7 +30,9 @@
       "Process management"
     ],
     "websiteURL": "https://github.com/psh4607/seongho-ops",
-    "brandColor": "#334155",
+    "brandColor": "#4F70E8",
+    "composerIcon": "./assets/plugin-icon.svg",
+    "logo": "./assets/plugin-icon.svg",
     "defaultPrompt": [
       "Use the correct local CLI for this operational task.",
       "Diagnose this CLI authentication failure safely.",

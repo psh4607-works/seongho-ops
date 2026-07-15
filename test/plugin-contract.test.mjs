@@ -23,8 +23,10 @@ test('plugin manifest exposes one focused skill directory', async () => {
   const manifest = await readJson(path.join(pluginRoot, '.codex-plugin', 'plugin.json'));
 
   assert.equal(manifest.name, 'seongho-ops');
-  assert.equal(manifest.version, '0.1.0');
+  assert.equal(manifest.version, '0.1.1');
   assert.equal(manifest.skills, './skills/');
+  assert.equal(manifest.interface.composerIcon, './assets/plugin-icon.svg');
+  assert.equal(manifest.interface.logo, './assets/plugin-icon.svg');
 });
 
 test('cli-routing keeps hard routes and auth recovery in lazy references', async () => {
