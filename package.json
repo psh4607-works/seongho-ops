@@ -1,7 +1,7 @@
 {
   "name": "seongho-ops",
-  "version": "0.1.1",
-  "description": "Personal operational CLI utilities and Codex CLI-routing skill.",
+  "version": "0.2.0",
+  "description": "Personal operational CLI utilities, CLI routing, and protected Vercel preview access for Codex.",
   "type": "module",
   "private": false,
   "license": "MIT",

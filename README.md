@@ -1,12 +1,15 @@
 # Seongho Ops
 
-`seongho-ops` combines a Codex operational CLI-routing skill with Seongho's personal `k` utility for force-stopping processes that own explicitly named local ports.
+`seongho-ops` combines Codex operational routing, protected Vercel preview access for the Codex in-app browser, and Seongho's personal `k` utility for force-stopping processes that own explicitly named local ports.
 
 ## What it adds
 
 - `seongho-ops:cli-routing`: selects purpose-built local CLIs for external services, authentication, infrastructure, databases, deployment, observability, browser QA, runtimes, AI coding tools, and state-changing Git work.
+- `seongho-ops:vercel-preview-browser`: uses the authenticated Vercel CLI to obtain a deployment-protection cookie and injects it into the Codex in-app browser through its permitted CDP capability.
 - `k <port> [port...]`: finds listeners with `lsof` and sends `SIGKILL` to each matching process.
 - Lazy routing and authentication references so the entry skill stays focused.
+
+The Vercel helper keeps the bypass value inside the local Node/browser runtime. It never returns the cookie to the model, never puts the bypass secret in a URL, and removes its temporary cookie jar after injection. Application login is a separate step and remains in the in-app browser's own persistent session.
 
 The previous `c` command is intentionally not part of this project.
 
@@ -17,17 +20,22 @@ The previous `c` command is intentionally not part of this project.
 plugins/seongho-ops/
   .codex-plugin/plugin.json
   bin/k.js
+  runtime/vercel-preview-iab.js
   skills/cli-routing/
     SKILL.md
     agents/openai.yaml
     references/routes.md
     references/auth-recovery.md
     scripts/k
+  skills/vercel-preview-browser/
+    SKILL.md
+    agents/openai.yaml
 src/commands/k.ts
+src/runtime/vercel-preview-iab.ts
 test/
 ```
 
-The TypeScript build emits a self-contained `plugins/seongho-ops/bin/k.js`. Keeping the built command inside the plugin root makes it available from the installed plugin cache as well as through a global package link.
+The TypeScript build emits a self-contained `plugins/seongho-ops/bin/k.js` and an importable `plugins/seongho-ops/runtime/vercel-preview-iab.js`. Keeping both artifacts inside the plugin root makes them available from the installed plugin cache.
 
 ## Development
 

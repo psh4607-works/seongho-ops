@@ -1,0 +1,7 @@
+interface:
+  display_name: "Vercel Preview Browser"
+  short_description: "Open protected Vercel previews in the Codex in-app browser"
+  default_prompt: "Use $seongho-ops:vercel-preview-browser to open this protected Vercel deployment in the Codex in-app browser without exposing bypass credentials."
+
+policy:
+  allow_implicit_invocation: true

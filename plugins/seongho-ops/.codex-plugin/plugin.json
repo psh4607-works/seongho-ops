@@ -1,7 +1,7 @@
 {
   "name": "seongho-ops",
-  "version": "0.1.1",
-  "description": "Routes operational work to purpose-built local CLIs and packages Seongho's port cleanup utility.",
+  "version": "0.2.0",
+  "description": "Routes operational work to purpose-built local CLIs, opens protected Vercel previews in the Codex browser, and packages Seongho's port cleanup utility.",
   "author": {
     "name": "Seongho",
     "url": "https://github.com/psh4607"
@@ -19,14 +19,15 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Seongho Ops",
-    "shortDescription": "Route operational CLI work and provide the k port cleanup command.",
-    "longDescription": "Seongho Ops selects the correct authenticated local CLI for external services, infrastructure, databases, deployments, observability, browser QA, runtimes, and state-changing Git work. It also bundles the k command for force-stopping processes that own explicitly requested local ports.",
+    "shortDescription": "Route operational CLI work, open protected Vercel previews, and provide k.",
+    "longDescription": "Seongho Ops selects the correct authenticated local CLI for external services, infrastructure, databases, deployments, observability, browser QA, runtimes, and state-changing Git work. It can securely seed Vercel deployment-protection cookies into the Codex in-app browser without exposing secrets to the model, and it bundles the k command for force-stopping processes that own explicitly requested local ports.",
     "developerName": "Seongho",
     "category": "Developer Tools",
     "capabilities": [
       "Interactive",
       "Local CLI",
       "Authentication recovery",
+      "Protected Vercel preview access",
       "Process management"
     ],
     "websiteURL": "https://github.com/psh4607/seongho-ops",
@@ -36,6 +37,7 @@
     "defaultPrompt": [
       "Use the correct local CLI for this operational task.",
       "Diagnose this CLI authentication failure safely.",
+      "Open this protected Vercel preview in the Codex browser.",
       "Free this local port with the bundled k command."
     ]
   }

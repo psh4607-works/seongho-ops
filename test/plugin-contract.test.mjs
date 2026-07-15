@@ -19,14 +19,32 @@ test('marketplace points at the packaged plugin', async () => {
   assert.equal(marketplace.plugins[0].name, 'seongho-ops');
   assert.equal(marketplace.plugins[0].source.path, './plugins/seongho-ops');
 });
-test('plugin manifest exposes one focused skill directory', async () => {
+test('plugin manifest exposes the packaged skill directory', async () => {
   const manifest = await readJson(path.join(pluginRoot, '.codex-plugin', 'plugin.json'));
 
   assert.equal(manifest.name, 'seongho-ops');
-  assert.equal(manifest.version, '0.1.1');
+  assert.equal(manifest.version, '0.2.0');
   assert.equal(manifest.skills, './skills/');
   assert.equal(manifest.interface.composerIcon, './assets/plugin-icon.svg');
   assert.equal(manifest.interface.logo, './assets/plugin-icon.svg');
+});
+
+test('protected preview skill keeps cookie handling inside the runtime helper', async () => {
+  const skillRoot = path.join(pluginRoot, 'skills', 'vercel-preview-browser');
+  const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
+  const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
+  const runtime = await readFile(
+    path.join(pluginRoot, 'runtime', 'vercel-preview-iab.js'),
+    'utf8',
+  );
+
+  assert.match(skill, /^---\nname: vercel-preview-browser\n/);
+  assert.match(skill, /browser:control-in-app-browser/);
+  assert.match(skill, /vercel-preview-iab\.js/);
+  assert.match(skill, /Never print, return, or persist the bypass cookie/);
+  assert.match(agent, /Vercel Preview Browser/);
+  assert.match(runtime, /x-vercel-set-bypass-cookie/);
+  assert.doesNotMatch(runtime, /VERCEL_AUTOMATION_BYPASS_SECRET\s*=/);
 });
 
 test('cli-routing keeps hard routes and auth recovery in lazy references', async () => {
