@@ -27,9 +27,11 @@ work is read-only and does not require production-code TDD.
    [database](references/database.md).
 5. Select one measured bottleneck for this cycle. Profile before optimizing and
    modify only an authorized domain; adjacent-domain triage remains read-only.
-6. Create the narrowest reliable functional and performance RED, make one
-   minimal evidence-backed change, then run focused functional tests, domain
-   measurements, and the comparable end-to-end path again.
+6. Create the narrowest reliable functional and performance RED. Run the
+   focused functional and performance RED and observe its expected failure
+   before making the production change. Make one minimal evidence-backed
+   change, then run focused functional tests, domain measurements, and the
+   comparable end-to-end path again.
 7. Stop when the target is met. If another domain becomes dominant, repeat only
    when that domain is authorized; otherwise report it without changing it.
 

@@ -140,6 +140,13 @@ test('performance engineering skill is scoped and progressively disclosed', asyn
   assert.match(skill, /Select one measured bottleneck for this cycle/i);
   assert.match(skill, /Production changes require `seongho-ops:test-driven-development`/);
 
+  // A performance RED only establishes test-first discipline when its expected
+  // failure is observed before the production change.
+  assert.match(
+    skill,
+    /Run the\s+focused functional and performance RED\s+and observe its expected failure\s+before making the production change/i,
+  );
+
   // Stable counters can gate RED; time-based evidence must be sampled rather
   // than converted into a flaky one-run wall-clock test.
   assert.match(
