@@ -1,11 +1,12 @@
 # Seongho Ops
 
-`seongho-ops` combines Codex operational routing, protected Vercel preview access for the Codex in-app browser, and Seongho's personal `k` utility for force-stopping processes that own explicitly named local ports.
+`seongho-ops` combines portable test-driven development guidance, Codex operational routing, protected Vercel preview access for the Codex in-app browser, and Seongho's personal `k` utility for force-stopping processes that own explicitly named local ports.
 
 ## What it adds
 
 - `seongho-ops:cli-routing`: selects purpose-built local CLIs for external services, authentication, infrastructure, databases, deployment, observability, browser QA, runtimes, AI coding tools, and state-changing Git work.
 - `seongho-ops:vercel-preview-browser`: uses the authenticated Vercel CLI to obtain a deployment-protection cookie and injects it into the Codex in-app browser through its permitted CDP capability.
+- `seongho-ops:test-driven-development`: requires a failing test before production code for features, bug fixes, refactors, and behavior changes.
 - `k <port> [port...]`: finds listeners with `lsof` and sends `SIGKILL` to each matching process.
 - Lazy routing and authentication references so the entry skill stays focused.
 
@@ -28,6 +29,9 @@ plugins/seongho-ops/
     references/auth-recovery.md
     scripts/k
   skills/vercel-preview-browser/
+    SKILL.md
+    agents/openai.yaml
+  skills/test-driven-development/
     SKILL.md
     agents/openai.yaml
 src/commands/k.ts
@@ -58,6 +62,19 @@ codex plugin add seongho-ops@seongho-ops
 ```
 
 Start a new Codex task after installation so the new skill catalog is loaded.
+
+The installed TDD skill permits implicit invocation, so normal use does not require the installer to edit a global or repository `AGENTS.md`. Invocation remains model-selected rather than an operating-system hook; repository tests and CI remain the enforceable backstop for test results.
+
+### Optional stronger TDD routing
+
+Users who want an explicit local instruction can add this to their own `AGENTS.md`:
+
+```markdown
+For every feature, bug fix, refactor, or behavior change, load
+`seongho-ops:test-driven-development` before writing production code.
+```
+
+This is optional and is never written automatically by the plugin.
 
 For local plugin development, register this checkout instead:
 

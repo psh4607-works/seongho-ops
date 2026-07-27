@@ -21,9 +21,11 @@ test('marketplace points at the packaged plugin', async () => {
 });
 test('plugin manifest exposes the packaged skill directory', async () => {
   const manifest = await readJson(path.join(pluginRoot, '.codex-plugin', 'plugin.json'));
+  const packageJson = await readJson(path.join(root, 'package.json'));
 
   assert.equal(manifest.name, 'seongho-ops');
-  assert.equal(manifest.version, '0.2.0');
+  assert.equal(manifest.version, '0.3.0');
+  assert.equal(packageJson.version, '0.3.0');
   assert.equal(manifest.skills, './skills/');
   assert.equal(manifest.interface.composerIcon, './assets/plugin-icon.svg');
   assert.equal(manifest.interface.logo, './assets/plugin-icon.svg');
