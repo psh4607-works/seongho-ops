@@ -24,8 +24,8 @@ test('plugin manifest exposes the packaged skill directory', async () => {
   const packageJson = await readJson(path.join(root, 'package.json'));
 
   assert.equal(manifest.name, 'seongho-ops');
-  assert.equal(manifest.version, '0.3.0');
-  assert.equal(packageJson.version, '0.3.0');
+  assert.equal(manifest.version, '0.4.0');
+  assert.equal(packageJson.version, '0.4.0');
   assert.equal(manifest.skills, './skills/');
   assert.equal(manifest.interface.composerIcon, './assets/plugin-icon.svg');
   assert.equal(manifest.interface.logo, './assets/plugin-icon.svg');
@@ -92,4 +92,23 @@ test('portable TDD skill is implicitly invocable without global instructions', a
   assert.match(skill, /explicit user approval/);
   assert.match(agent, /allow_implicit_invocation: true/);
   assert.doesNotMatch(skill, /REQUIRED SUB-SKILL:.*superpowers:/);
+});
+
+test('performance engineering skill is scoped and progressively disclosed', async () => {
+  const skillRoot = path.join(pluginRoot, 'skills', 'performance-engineering');
+  const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
+  const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
+  const references = await Promise.all(
+    ['measurement.md', 'frontend.md', 'backend.md', 'database.md'].map((file) =>
+      readFile(path.join(skillRoot, 'references', file), 'utf8'),
+    ),
+  );
+
+  assert.match(skill, /^---\nname: performance-engineering\n/);
+  assert.match(skill, /references\/measurement\.md/);
+  assert.match(skill, /references\/frontend\.md/);
+  assert.match(skill, /references\/backend\.md/);
+  assert.match(skill, /references\/database\.md/);
+  assert.match(agent, /allow_implicit_invocation: true/);
+  assert.ok(references.every((reference) => reference.length > 0));
 });
