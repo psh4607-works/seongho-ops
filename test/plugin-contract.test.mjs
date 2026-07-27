@@ -24,8 +24,8 @@ test('plugin manifest exposes the packaged skill directory', async () => {
   const packageJson = await readJson(path.join(root, 'package.json'));
 
   assert.equal(manifest.name, 'seongho-ops');
-  assert.equal(manifest.version, '0.3.0');
-  assert.equal(packageJson.version, '0.3.0');
+  assert.equal(manifest.version, '0.4.0');
+  assert.equal(packageJson.version, '0.4.0');
   assert.equal(manifest.skills, './skills/');
   assert.equal(manifest.interface.composerIcon, './assets/plugin-icon.svg');
   assert.equal(manifest.interface.logo, './assets/plugin-icon.svg');
@@ -92,4 +92,111 @@ test('portable TDD skill is implicitly invocable without global instructions', a
   assert.match(skill, /explicit user approval/);
   assert.match(agent, /allow_implicit_invocation: true/);
   assert.doesNotMatch(skill, /REQUIRED SUB-SKILL:.*superpowers:/);
+});
+
+test('performance engineering skill is scoped and progressively disclosed', async () => {
+  const skillRoot = path.join(pluginRoot, 'skills', 'performance-engineering');
+  const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
+  const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
+  const references = await Promise.all(
+    ['measurement.md', 'frontend.md', 'backend.md', 'database.md'].map((file) =>
+      readFile(path.join(skillRoot, 'references', file), 'utf8'),
+    ),
+  );
+
+  assert.match(skill, /^---\nname: performance-engineering\n/);
+  assert.match(skill, /references\/measurement\.md/);
+  assert.match(skill, /references\/frontend\.md/);
+  assert.match(skill, /references\/backend\.md/);
+  assert.match(skill, /references\/database\.md/);
+  assert.match(agent, /allow_implicit_invocation: true/);
+  assert.ok(references.every((reference) => reference.length > 0));
+
+  // Activation is intentionally narrow: routine delivery work must not inherit
+  // a performance workflow merely because it might be expensive.
+  assert.match(
+    skill,
+    /^---[\s\S]*description: Use when the user explicitly requests performance[\s\S]*---/m,
+  );
+  assert.match(
+    skill,
+    /Do not activate for an?\s+ordinary feature, bug fix, refactor, test, or build[\s\S]*no performance target/i,
+  );
+
+  // Every improvement is cross-layer evidence gathering, but mutations remain
+  // limited to the domain that the user authorized.
+  assert.match(
+    skill,
+    /Triage frontend, backend, and database boundaries read-only[\s\S]*attribute the dominant bottleneck/i,
+  );
+  assert.match(
+    skill,
+    /modify only an authorized domain[\s\S]*adjacent-domain triage remains read-only/i,
+  );
+  assert.match(
+    skill,
+    /Capture a reproducible end-to-end baseline[\s\S]*comparable end-to-end path again/i,
+  );
+  assert.match(skill, /Select one measured bottleneck for this cycle/i);
+  assert.match(skill, /Production changes require `seongho-ops:test-driven-development`/);
+
+  // A performance RED only establishes test-first discipline when its expected
+  // failure is observed before the production change.
+  assert.match(
+    skill,
+    /Run the\s+focused functional and performance RED\s+and observe its expected failure\s+before making the production change/i,
+  );
+
+  assert.match(
+    skill,
+    /## Iron Law\s+NO PERFORMANCE PRODUCTION CHANGE WITHOUT RUNNING THE RED AND OBSERVING ITS EXPECTED FAILURE FIRST/,
+  );
+
+  // Stable counters can gate RED; time-based evidence must be sampled rather
+  // than converted into a flaky one-run wall-clock test.
+  assert.match(
+    skill,
+    /Deterministic measures[\s\S]*(?:query count|render count)[\s\S]*blocking RED tests/i,
+  );
+  assert.match(
+    skill,
+    /Noisy wall-clock measures[\s\S]*controlled repeated samples[\s\S]*never become a single-run flaky gate/i,
+  );
+
+  // Solution choices stay evidence-led. Cache safety is deliberately explicit
+  // because a cache can otherwise hide a performance problem by breaking data
+  // correctness or invalidation behavior.
+  assert.match(skill, /Cache or memoization comes last and is never default/i);
+  assert.match(skill, /An index or concurrency change[\s\S]*only after measurement/i);
+  assert.match(
+    skill,
+    /repeated work is measured as dominant[\s\S]*correctness, key completeness, invalidation, isolation[\s\S]*(?:capacity or expiry)[\s\S]*concurrent writers[\s\S]*safe miss\/failure behavior/i,
+  );
+
+  // Each progressive reference owns a stable boundary that prevents a local
+  // diagnostic signal from becoming a universal success condition or an unsafe
+  // production operation.
+  const [measurement, frontend, backend, database] = references;
+  assert.match(
+    measurement,
+    /noisy wall-clock measures[\s\S]*repeated samples[\s\S]*single sample out of blocking CI/i,
+  );
+  assert.match(
+    frontend,
+    /Do not define a\s+universal reflow or repaint count as a success criterion/i,
+  );
+  assert.match(
+    backend,
+    /Treat N\+1 as a hypothesis, never a conclusion from code shape/i,
+  );
+  assert.match(database, /Do not mandate index use or any fixed plan shape/i);
+  assert.match(
+    database,
+    /EXPLAIN ANALYZE[\s\S]*executes the statement[\s\S]*known read-only\s+statements[\s\S]*safe representative environment/i,
+  );
+  assert.match(
+    database,
+    /writes[\s\S]*non-executing\s+plans[\s\S]*explicitly authorized[\s\S]*controlled rollback/i,
+  );
+  assert.match(database, /live\s+production[\s\S]*impact controls/i);
 });

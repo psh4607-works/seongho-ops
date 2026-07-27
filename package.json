@@ -1,7 +1,7 @@
 {
   "name": "seongho-ops",
-  "version": "0.3.0",
-  "description": "Portable TDD guidance, operational CLI utilities, CLI routing, and protected Vercel preview access for Codex.",
+  "version": "0.4.0",
+  "description": "Portable TDD and performance engineering guidance, operational CLI utilities, CLI routing, and protected Vercel preview access for Codex.",
   "type": "module",
   "private": false,
   "license": "MIT",
