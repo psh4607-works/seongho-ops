@@ -111,4 +111,53 @@ test('performance engineering skill is scoped and progressively disclosed', asyn
   assert.match(skill, /references\/database\.md/);
   assert.match(agent, /allow_implicit_invocation: true/);
   assert.ok(references.every((reference) => reference.length > 0));
+
+  // Activation is intentionally narrow: routine delivery work must not inherit
+  // a performance workflow merely because it might be expensive.
+  assert.match(
+    skill,
+    /^---[\s\S]*description: Use when the user explicitly requests performance[\s\S]*---/m,
+  );
+  assert.match(
+    skill,
+    /Do not activate for an?\s+ordinary feature, bug fix, refactor, test, or build[\s\S]*no performance target/i,
+  );
+
+  // Every improvement is cross-layer evidence gathering, but mutations remain
+  // limited to the domain that the user authorized.
+  assert.match(
+    skill,
+    /Triage frontend, backend, and database boundaries read-only[\s\S]*attribute the dominant bottleneck/i,
+  );
+  assert.match(
+    skill,
+    /modify only an authorized domain[\s\S]*adjacent-domain triage remains read-only/i,
+  );
+  assert.match(
+    skill,
+    /Capture a reproducible end-to-end baseline[\s\S]*comparable end-to-end path again/i,
+  );
+  assert.match(skill, /Select one measured bottleneck for this cycle/i);
+  assert.match(skill, /Production changes require `seongho-ops:test-driven-development`/);
+
+  // Stable counters can gate RED; time-based evidence must be sampled rather
+  // than converted into a flaky one-run wall-clock test.
+  assert.match(
+    skill,
+    /Deterministic measures[\s\S]*(?:query count|render count)[\s\S]*blocking RED tests/i,
+  );
+  assert.match(
+    skill,
+    /Noisy wall-clock measures[\s\S]*controlled repeated samples[\s\S]*never become a single-run flaky gate/i,
+  );
+
+  // Solution choices stay evidence-led. Cache safety is deliberately explicit
+  // because a cache can otherwise hide a performance problem by breaking data
+  // correctness or invalidation behavior.
+  assert.match(skill, /Cache or memoization comes last and is never default/i);
+  assert.match(skill, /An index or concurrency change[\s\S]*only after measurement/i);
+  assert.match(
+    skill,
+    /repeated work is measured as dominant[\s\S]*correctness, key completeness, invalidation, isolation[\s\S]*(?:capacity or expiry)[\s\S]*concurrent writers[\s\S]*safe miss\/failure behavior/i,
+  );
 });
