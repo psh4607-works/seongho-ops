@@ -1,7 +1,7 @@
 {
   "name": "seongho-ops",
-  "version": "0.3.0",
-  "description": "Guides production changes through TDD, routes operational work to purpose-built local CLIs, opens protected Vercel previews, and packages Seongho's port cleanup utility.",
+  "version": "0.4.0",
+  "description": "Guides production changes through TDD and measured performance engineering, routes operational work to purpose-built local CLIs, opens protected Vercel previews, and packages Seongho's port cleanup utility.",
   "author": {
     "name": "Seongho",
     "url": "https://github.com/psh4607"
@@ -16,13 +16,16 @@
     "routing",
     "developer-tools",
     "tdd",
-    "testing"
+    "testing",
+    "performance",
+    "benchmarking",
+    "profiling"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Seongho Ops",
-    "shortDescription": "Guide code changes with TDD, route operational CLI work, open protected previews, and provide k.",
-    "longDescription": "Seongho Ops provides an implicitly invocable test-driven development skill for features, bug fixes, refactors, and behavior changes without modifying global instructions. It also selects the correct authenticated local CLI for operational work, securely opens protected Vercel previews in the Codex browser, and bundles the k command for force-stopping processes that own explicitly requested local ports.",
+    "shortDescription": "Guide code changes with TDD and measured performance work, route operational CLI work, open protected previews, and provide k.",
+    "longDescription": "Seongho Ops provides implicitly invocable test-driven development and performance engineering skills. The performance skill establishes an end-to-end baseline, read-only cross-layer triage, authorized mutation scope, and one measured bottleneck per cycle. It also selects the correct authenticated local CLI for operational work, securely opens protected Vercel previews in the Codex browser, and bundles the k command for force-stopping processes that own explicitly requested local ports.",
     "developerName": "Seongho",
     "category": "Developer Tools",
     "capabilities": [
@@ -31,7 +34,9 @@
       "Authentication recovery",
       "Protected Vercel preview access",
       "Process management",
-      "Test-driven development"
+      "Test-driven development",
+      "Performance engineering",
+      "Performance measurement and profiling"
     ],
     "websiteURL": "https://github.com/psh4607/seongho-ops",
     "brandColor": "#4F70E8",
@@ -42,7 +47,8 @@
       "Diagnose this CLI authentication failure safely.",
       "Open this protected Vercel preview in the Codex browser.",
       "Free this local port with the bundled k command.",
-      "Implement this code change with test-driven development."
+      "Implement this code change with test-driven development.",
+      "Measure this bottleneck and meet its performance target without guessing."
     ]
   }
 }

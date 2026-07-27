@@ -1,0 +1,7 @@
+interface:
+  display_name: "Performance Engineering"
+  short_description: "Measure and improve performance without guessing"
+  default_prompt: "Use $seongho-ops:performance-engineering to measure this bottleneck and meet its performance target."
+
+policy:
+  allow_implicit_invocation: true
