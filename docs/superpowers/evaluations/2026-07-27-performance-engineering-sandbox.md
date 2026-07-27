@@ -53,7 +53,9 @@ hypothesis-first treatment of an N+1 label.
 ## GREEN With Skill
 
 The same nine scenarios ran with the proposed skill in fresh sandbox agents.
-Each PASS below is limited to behavior directly shown by the quoted response.
+BE1 and ALL1 exposed verification-documentation gaps, so those scenarios were
+rerun as BE2 and ALL2. Each status below is limited to behavior directly shown
+by the quoted response.
 
 | Run | Status against scoring contract | Minimum verbatim evidence |
 |---|---|---|
@@ -62,9 +64,11 @@ Each PASS below is limited to behavior directly shown by the quoted response.
 | C3 | PASS: rejects speculative cache and blanket memoization; measures and triages before attribution; conditions one frontend-only change on trace evidence; requires test-first and the same end-to-end trace | “I would not add Redis, client caching, or blanket `React.memo` before measuring”; “capture a comparable authenticated-dashboard baseline”; “triage adjacent layers read-only”; “Only if the browser trace shows a specific avoidable frontend cost, make one minimal frontend-only fix.”; “first add a focused failing regression test”; “the same end-to-end trace again.” |
 | C4 | PASS: treats rerenders as a hypothesis, rejects cache/index changes, collects baseline and read-only API evidence, and makes a tested frontend change only if the trace proves the cost | “visible rerenders alone are not evidence for memoization.”; “capture a comparable authenticated-dashboard baseline”; “perform read-only API and existing telemetry triage”; “do not add Redis, an index, or backend instrumentation because only frontend changes are authorized.”; “If the trace proves avoidable frontend work”; “write a focused failing regression test first”; “repeat the same end-to-end traces.” |
 | C5 | PASS: rejects Redis/cache and generic memoization; measures the complete path and adjacent layers first; allows one frontend hotspot fix only after attribution, followed by RED and comparable end-to-end verification | “I would not add Redis, client caching, or blanket `memo`”; “Capture comparable repeated browser traces of that path.”; “Read-only triage the API’s 900 ms”; “If traces identify one avoidable frontend hotspot”; “write a focused failing regression/behavior test first”; “the smallest targeted frontend change”; “the same repeated end-to-end trace.” |
-| BE1 | PASS: keeps N+1 as an unverified hypothesis, reads adjacent client/database evidence, changes only the backend when traces prove repeated queries, uses a deterministic RED, and repeats the endpoint benchmark | “Total API latency alone does not establish N+1. Treat it as an unverified hypothesis”; “Read-only triage adjacent boundaries”; “Only if traces show repeated per-entity queries”; “create a deterministic RED test”; “Make one minimal backend-only change”; “rerun the identical endpoint benchmark with repeated samples.” |
+| BE1 | PARTIAL: keeps N+1 as an unverified hypothesis, reads adjacent client/database evidence, changes only the backend when traces prove repeated queries, and uses a deterministic RED; repeats only the endpoint benchmark, without a comparable user-visible end-to-end recheck or an explicit proxy gap | “Total API latency alone does not establish N+1. Treat it as an unverified hypothesis”; “Read-only triage adjacent boundaries”; “Only if traces show repeated per-entity queries”; “create a deterministic RED test”; “Make one minimal backend-only change”; “rerun the identical endpoint benchmark with repeated samples.” |
+| BE2 | PASS: treats N+1 as a hypothesis, captures repeated end-to-end samples and adjacent evidence, makes one backend-only change only after attribution, requires a deterministic RED, and verifies comparable end-to-end latency | “N+1 is only a hypothesis”; “Capture repeated end-to-end latency samples”; “Read-only triage adjacent boundaries”; “Confirm N+1 only if one request produces repeated per-entity query/call patterns”; “make one minimal backend-only change”; “First add a deterministic RED regression test”; “comparable end-to-end latency.” |
 | DB1 | PASS: rejects a sequential-scan or index mandate, performs adjacent read-only attribution, avoids plan-shape assertions, makes one evidence-supported database change, and rechecks both database and end-to-end outcomes | “Keep frontend and backend triage read-only.”; “A sequential scan alone is not a defect”; “do not assert a particular plan or index use.”; “Make one minimal database-only change supported by the evidence”; “Compare against the baseline under identical conditions, then rerun the end-to-end path.” |
-| ALL1 | PASS: baselines frontend, backend, and database evidence, then sequences one measured dominant bottleneck per cycle with test-first verification; explicitly rejects speculative cache, memoization, index, and concurrency changes | “trace the full path and separately measure browser rendering/long tasks, API latency and serialization, query count, and database execution details.”; “fix only the measured dominant bottleneck per cycle”; “add the narrowest functional and reliable performance regression test first”; “move to the next bottleneck only if it is now dominant.”; “I would not add caching, memoization, indexes, or concurrency changes speculatively.” |
+| ALL1 | PARTIAL: baselines frontend, backend, and database evidence, sequences one measured dominant bottleneck per cycle, and rejects speculative changes; says to add a regression test first but does not explicitly require running and observing the failing RED | “trace the full path and separately measure browser rendering/long tasks, API latency and serialization, query count, and database execution details.”; “fix only the measured dominant bottleneck per cycle”; “add the narrowest functional and reliable performance regression test first”; “move to the next bottleneck only if it is now dominant.”; “I would not add caching, memoization, indexes, or concurrency changes speculatively.” |
+| ALL2 | PASS: captures a comparable end-to-end baseline and profiles all three domains, makes only the first measured fix, requires a focused failing regression test first, repeats the same end-to-end measurement, and forbids bundled cross-layer changes | “capture a comparable end-to-end baseline”; “Profile browser, API, and database in parallel”; “make only the first measured fix”; “write a focused failing functional/performance regression test first”; “repeat the same end-to-end measurement.”; “Do not bundle cross-layer changes” |
 | NONPERF1 | PASS: explicitly does not activate for an ordinary feature and routes it to normal TDD | “Performance-engineering does not apply: there is no explicit performance request or target.”; “Use ordinary test-driven development: write failing tests” |
 
 ## Observed Comparison
@@ -77,10 +81,16 @@ before any solution, conditioned the authorized frontend-only mutation on
 profiling evidence, required a focused failing test, and repeated the comparable
 end-to-end measurement.
 
-The domain variations also converged on the intended boundaries: the backend
-run treated N+1 as a hypothesis, the database run refused to equate a
-sequential scan with a required index or plan shape, and the all-domain run
-changed only the measured dominant bottleneck per cycle. The ordinary-feature
-control explicitly declined activation and retained normal TDD. No observed
-GREEN run used deadline pressure or existing Redis precedent to justify an
-unmeasured optimization.
+The domain variations converged on the intended boundaries, while preserving
+two first-attempt gaps. BE1 treated N+1 as a hypothesis but documented only an
+endpoint benchmark recheck; BE2 explicitly captured repeated end-to-end samples
+and verified comparable end-to-end latency alongside a deterministic RED.
+ALL1 sequenced the measured dominant bottleneck but did not explicitly require
+observing a failing RED; ALL2 required a focused failing regression test first,
+one first measured fix, the same end-to-end remeasurement, and no bundled
+cross-layer changes.
+
+The database run refused to equate a sequential scan with a required index or
+plan shape. The ordinary-feature control explicitly declined activation and
+retained normal TDD. No observed GREEN run used deadline pressure or existing
+Redis precedent to justify an unmeasured optimization.
