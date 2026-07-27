@@ -52,11 +52,6 @@ test('portable TDD skill is implicitly invocable without global instructions', a
   const skillRoot = path.join(pluginRoot, 'skills', 'test-driven-development');
   const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
   const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
-  const packageJson = await readJson(path.join(root, 'package.json'));
-  const manifest = await readJson(path.join(pluginRoot, '.codex-plugin', 'plugin.json'));
-
-  assert.equal(packageJson.version, '0.3.0');
-  assert.equal(manifest.version, '0.3.0');
   assert.match(
     skill,
     /^---\nname: test-driven-development\ndescription: Use when .*feature.*bug fix.*refactor.*behavior change.*before writing production code\n---/s,
@@ -174,7 +169,7 @@ git commit -m "feat: add portable TDD skill"
 
 - [ ] **Step 1: Update release metadata**
 
-Set `version` to `0.3.0` in `package.json` and `plugins/seongho-ops/.codex-plugin/plugin.json`. Update the existing manifest-version assertion in `test/plugin-contract.test.mjs` from `0.2.0` to `0.3.0`. Update manifest description, keywords, capabilities, long description, and default prompts to include test-driven development without removing current operational capabilities.
+First add `assert.equal(packageJson.version, '0.3.0')` to the existing manifest contract and update its manifest-version assertion from `0.2.0` to `0.3.0`; run that focused test and observe the expected version failure. Then set `version` to `0.3.0` in `package.json` and `plugins/seongho-ops/.codex-plugin/plugin.json`. Update manifest description, keywords, capabilities, long description, and default prompts to include test-driven development without removing current operational capabilities.
 
 - [ ] **Step 2: Document portable and optional routing**
 

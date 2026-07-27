@@ -1,0 +1,7 @@
+interface:
+  display_name: "Test-Driven Development"
+  short_description: "Use a failing test to guide every production code change"
+  default_prompt: "Use $seongho-ops:test-driven-development before writing or changing production code."
+
+policy:
+  allow_implicit_invocation: true

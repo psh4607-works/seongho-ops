@@ -79,11 +79,7 @@ test('portable TDD skill is implicitly invocable without global instructions', a
   const skillRoot = path.join(pluginRoot, 'skills', 'test-driven-development');
   const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
   const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
-  const packageJson = await readJson(path.join(root, 'package.json'));
-  const manifest = await readJson(path.join(pluginRoot, '.codex-plugin', 'plugin.json'));
 
-  assert.equal(packageJson.version, '0.3.0');
-  assert.equal(manifest.version, '0.3.0');
   assert.match(
     skill,
     /^---\nname: test-driven-development\ndescription: Use when .*feature.*bug fix.*refactor.*behavior change.*before writing production code\n---/s,
