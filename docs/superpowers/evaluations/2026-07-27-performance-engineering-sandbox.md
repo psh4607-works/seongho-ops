@@ -107,3 +107,20 @@ The database run refused to equate a sequential scan with a required index or
 plan shape. The ordinary-feature control explicitly declined activation and
 retained normal TDD. No observed GREEN run used deadline pressure or existing
 Redis precedent to justify an unmeasured optimization.
+
+## Replayable Final Audit
+
+The [complete final sandbox transcripts](2026-07-27-performance-engineering-sandbox-runs.md)
+are the authoritative provenance for the final RED and GREEN audit batches.
+The earlier tables above remain intact as development history, including the
+intermediate loopholes that shaped the skill.
+
+- RED C1-C5 selected frontend solutions before complete attribution.
+- RED BE was hypothesis-first and therefore a partial control success.
+- RED DB selected index and plan-shape outcomes and proposed unsafe,
+  unconditional `EXPLAIN ANALYZE`.
+- RED ALL proposed simultaneous frontend, backend, and database changes.
+- RED NONPERF correctly stayed with ordinary TDD.
+- All nine final GREEN runs passed: they preserved observed RED, comparable
+  end-to-end verification, mutation-domain safety, sequential bottleneck work,
+  and non-activation for the ordinary feature.
