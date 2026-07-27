@@ -74,7 +74,7 @@ If a RED test passes initially, it is not the intended RED and must be corrected
 
 | Observed pressure response | Count | Required counter |
 |---|---:|---|
-| Solution-first cache or memoization | 5 | Baseline, profile, and attribute first. |
+| Solution-first frontend change under canonical pressure | 5 | Baseline, profile, and attribute first. |
 | Immediate change without comparable baseline | 1 | Measure the end-to-end path before and after. |
 | Unsupported index proposal | 1 | Inspect representative plan and outcome evidence first. |
 | Simultaneous cross-layer changes | 1 | Change one measured bottleneck sequentially. |

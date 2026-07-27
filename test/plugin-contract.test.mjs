@@ -172,4 +172,31 @@ test('performance engineering skill is scoped and progressively disclosed', asyn
     skill,
     /repeated work is measured as dominant[\s\S]*correctness, key completeness, invalidation, isolation[\s\S]*(?:capacity or expiry)[\s\S]*concurrent writers[\s\S]*safe miss\/failure behavior/i,
   );
+
+  // Each progressive reference owns a stable boundary that prevents a local
+  // diagnostic signal from becoming a universal success condition or an unsafe
+  // production operation.
+  const [measurement, frontend, backend, database] = references;
+  assert.match(
+    measurement,
+    /noisy wall-clock measures[\s\S]*repeated samples[\s\S]*single sample out of blocking CI/i,
+  );
+  assert.match(
+    frontend,
+    /Do not define a\s+universal reflow or repaint count as a success criterion/i,
+  );
+  assert.match(
+    backend,
+    /Treat N\+1 as a hypothesis, never a conclusion from code shape/i,
+  );
+  assert.match(database, /Do not mandate index use or any fixed plan shape/i);
+  assert.match(
+    database,
+    /EXPLAIN ANALYZE[\s\S]*executes the statement[\s\S]*known read-only\s+statements[\s\S]*safe representative environment/i,
+  );
+  assert.match(
+    database,
+    /writes[\s\S]*non-executing\s+plans[\s\S]*explicitly authorized[\s\S]*controlled rollback/i,
+  );
+  assert.match(database, /live\s+production[\s\S]*impact controls/i);
 });

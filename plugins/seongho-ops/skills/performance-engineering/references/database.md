@@ -5,6 +5,12 @@ estimated rows, loops, buffers, I/O, spills, locks, scanned versus returned
 rows, selectivity, and application query count. `EXPLAIN ANALYZE` or an
 equivalent execution plan is diagnostic evidence, not a required outcome.
 
+`EXPLAIN ANALYZE` executes the statement. Restrict it to known read-only
+statements in a safe representative environment. For writes, use non-executing
+plans, or run only with explicitly authorized controlled rollback. In live
+production, apply impact controls: approval, bounded scope and load, monitoring,
+and a stop or cancel condition before collecting execution evidence.
+
 Do not mandate index use or any fixed plan shape. A sequential scan and other
 plan choices may be correct for the distribution. Do not use a brittle plan
 assertion as the performance test; prefer stable outcome budgets where one
