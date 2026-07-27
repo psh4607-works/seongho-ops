@@ -147,6 +147,11 @@ test('performance engineering skill is scoped and progressively disclosed', asyn
     /Run the\s+focused functional and performance RED\s+and observe its expected failure\s+before making the production change/i,
   );
 
+  assert.match(
+    skill,
+    /## Iron Law\s+NO PERFORMANCE PRODUCTION CHANGE WITHOUT RUNNING THE RED AND OBSERVING ITS EXPECTED FAILURE FIRST/,
+  );
+
   // Stable counters can gate RED; time-based evidence must be sampled rather
   // than converted into a flaky one-run wall-clock test.
   assert.match(

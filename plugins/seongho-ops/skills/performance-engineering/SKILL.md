@@ -12,6 +12,12 @@ report a potentially expensive path as a follow-up risk instead.
 Production changes require `seongho-ops:test-driven-development`. Assessment-only
 work is read-only and does not require production-code TDD.
 
+## Iron Law
+
+NO PERFORMANCE PRODUCTION CHANGE WITHOUT RUNNING THE RED AND OBSERVING ITS EXPECTED FAILURE FIRST
+
+If a RED test passes initially, it is not the intended RED and must be corrected.
+
 ## Workflow
 
 1. Classify the request as assessment-only or improvement-authorized. Record
@@ -91,6 +97,8 @@ future evaluation observes a new rationalization.
       and evidence gap are reported.
 - [ ] Frontend, backend, and database boundaries received read-only triage.
 - [ ] Each production change followed `seongho-ops:test-driven-development`.
+- [ ] The focused functional and performance RED ran and its expected failure was
+      observed before the production change.
 - [ ] One measured bottleneck was changed per cycle in authorized domains only.
 - [ ] Functional tests, reliable performance RED, and outcome verification pass.
 - [ ] Remaining unauthorized or non-dominant bottlenecks are reported, not changed.
