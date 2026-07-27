@@ -53,9 +53,12 @@ hypothesis-first treatment of an N+1 label.
 ## GREEN With Skill
 
 The same nine scenarios ran with the proposed skill in fresh sandbox agents.
-BE1 and ALL1 exposed verification-documentation gaps, so those scenarios were
-rerun as BE2 and ALL2. Each status below is limited to behavior directly shown
-by the quoted response.
+BE1 exposed an end-to-end verification gap, which BE2 closed. ALL1, ALL2, and
+ALL3 successively exposed that merely writing or adding a performance test did
+not prove the test was run and observed failing before implementation. That
+sequence prompted an explicit Iron Law fix, after which the scenario was rerun
+fresh as ALL4. Each status below is limited to behavior directly shown by the
+quoted response.
 
 | Run | Status against scoring contract | Minimum verbatim evidence |
 |---|---|---|
@@ -68,7 +71,9 @@ by the quoted response.
 | BE2 | PASS: treats N+1 as a hypothesis, captures repeated end-to-end samples and adjacent evidence, makes one backend-only change only after attribution, requires a deterministic RED, and verifies comparable end-to-end latency | “N+1 is only a hypothesis”; “Capture repeated end-to-end latency samples”; “Read-only triage adjacent boundaries”; “Confirm N+1 only if one request produces repeated per-entity query/call patterns”; “make one minimal backend-only change”; “First add a deterministic RED regression test”; “comparable end-to-end latency.” |
 | DB1 | PASS: rejects a sequential-scan or index mandate, performs adjacent read-only attribution, avoids plan-shape assertions, makes one evidence-supported database change, and rechecks both database and end-to-end outcomes | “Keep frontend and backend triage read-only.”; “A sequential scan alone is not a defect”; “do not assert a particular plan or index use.”; “Make one minimal database-only change supported by the evidence”; “Compare against the baseline under identical conditions, then rerun the end-to-end path.” |
 | ALL1 | PARTIAL: baselines frontend, backend, and database evidence, sequences one measured dominant bottleneck per cycle, and rejects speculative changes; says to add a regression test first but does not explicitly require running and observing the failing RED | “trace the full path and separately measure browser rendering/long tasks, API latency and serialization, query count, and database execution details.”; “fix only the measured dominant bottleneck per cycle”; “add the narrowest functional and reliable performance regression test first”; “move to the next bottleneck only if it is now dominant.”; “I would not add caching, memoization, indexes, or concurrency changes speculatively.” |
-| ALL2 | PASS: captures a comparable end-to-end baseline and profiles all three domains, makes only the first measured fix, requires a focused failing regression test first, repeats the same end-to-end measurement, and forbids bundled cross-layer changes | “capture a comparable end-to-end baseline”; “Profile browser, API, and database in parallel”; “make only the first measured fix”; “write a focused failing functional/performance regression test first”; “repeat the same end-to-end measurement.”; “Do not bundle cross-layer changes” |
+| ALL2 | PARTIAL: captures a comparable end-to-end baseline, profiles all three domains, makes only the first measured fix, repeats the same end-to-end measurement, and forbids bundled cross-layer changes; it calls the test “failing” but does not explicitly run and observe that failure | “capture a comparable end-to-end baseline”; “Profile browser, API, and database in parallel”; “make only the first measured fix”; “write a focused failing functional/performance regression test first”; “repeat the same end-to-end measurement.”; “Do not bundle cross-layer changes” |
+| ALL3 | PARTIAL: adds a functional regression test and reliable performance guard and reruns the same end-to-end fixture after each cycle, but still does not explicitly run and observe the failure before implementation; this prompted the Iron Law skill fix | “For each change, add a functional regression test plus a reliable performance guard”; “Re-run the same end-to-end fixture after each cycle”; “do not introduce caching, memoization, indexes, or concurrency changes without measurement showing they are the current bottleneck.” |
+| ALL4 | PASS after Iron Law fix: starts with an end-to-end baseline and cross-domain profiling, changes only the first measured bottleneck, adds and runs a deterministic performance RED and confirms its failure before the smallest fix, then rechecks the domain and the same end-to-end path sequentially without speculation | “baseline the representative large-list interaction end-to-end, then profile frontend, backend, and database”; “For the first measured bottleneck only”; “add a focused functional and deterministic performance RED test, confirm it fails, then implement the smallest fix”; “After each single-layer change, I’d run functional tests, the performance test, and the same end-to-end measurement.”; “repeat sequentially only if another authorized layer becomes the bottleneck—no speculative cache, memoization, indexing, or simultaneous cross-layer rewrite.” |
 | NONPERF1 | PASS: explicitly does not activate for an ordinary feature and routes it to normal TDD | “Performance-engineering does not apply: there is no explicit performance request or target.”; “Use ordinary test-driven development: write failing tests” |
 
 ## Observed Comparison
@@ -82,13 +87,21 @@ profiling evidence, required a focused failing test, and repeated the comparable
 end-to-end measurement.
 
 The domain variations converged on the intended boundaries, while preserving
-two first-attempt gaps. BE1 treated N+1 as a hypothesis but documented only an
-endpoint benchmark recheck; BE2 explicitly captured repeated end-to-end samples
-and verified comparable end-to-end latency alongside a deterministic RED.
-ALL1 sequenced the measured dominant bottleneck but did not explicitly require
-observing a failing RED; ALL2 required a focused failing regression test first,
-one first measured fix, the same end-to-end remeasurement, and no bundled
-cross-layer changes.
+the unsuccessful iterations that exposed gaps. BE1 treated N+1 as a hypothesis
+but documented only an endpoint benchmark recheck; BE2 explicitly captured
+repeated end-to-end samples and verified comparable end-to-end latency alongside
+a deterministic RED. ALL1 and ALL2 named a test-first step, while ALL3 added a
+functional regression test and a reliable performance guard, but none explicitly
+required running the test and observing the expected failure before
+implementation. Those three runs remain PARTIAL rather than being hidden by a
+later success.
+
+After the skill made the performance RED an explicit Iron Law, the fresh ALL4
+run required a focused functional and deterministic performance RED, confirmed
+its failure before the smallest implementation, changed only the first measured
+bottleneck, and rechecked both the affected layer and the same end-to-end path.
+It also kept further authorized layers sequential and rejected speculative or
+simultaneous cross-layer changes.
 
 The database run refused to equate a sequential scan with a required index or
 plan shape. The ordinary-feature control explicitly declined activation and
