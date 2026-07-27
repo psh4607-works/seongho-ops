@@ -74,3 +74,24 @@ test('package and skill wrapper expose only k', async () => {
   assert.match(wrapper, /bin\/k\.js/);
   assert.match(built, /^#!\/usr\/bin\/env node/);
 });
+
+test('portable TDD skill is implicitly invocable without global instructions', async () => {
+  const skillRoot = path.join(pluginRoot, 'skills', 'test-driven-development');
+  const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
+  const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
+  const packageJson = await readJson(path.join(root, 'package.json'));
+  const manifest = await readJson(path.join(pluginRoot, '.codex-plugin', 'plugin.json'));
+
+  assert.equal(packageJson.version, '0.3.0');
+  assert.equal(manifest.version, '0.3.0');
+  assert.match(
+    skill,
+    /^---\nname: test-driven-development\ndescription: Use when .*feature.*bug fix.*refactor.*behavior change.*before writing production code\n---/s,
+  );
+  assert.match(skill, /NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST/);
+  assert.match(skill, /Verify RED/);
+  assert.match(skill, /Verify GREEN/);
+  assert.match(skill, /explicit user approval/);
+  assert.match(agent, /allow_implicit_invocation: true/);
+  assert.doesNotMatch(skill, /REQUIRED SUB-SKILL:.*superpowers:/);
+});
