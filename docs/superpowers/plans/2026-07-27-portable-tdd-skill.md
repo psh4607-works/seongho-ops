@@ -242,7 +242,7 @@ codex plugin marketplace upgrade seongho-ops
 codex plugin add seongho-ops@seongho-ops
 ```
 
-If the marketplace tracks only `main` and the feature branch has not been merged, temporarily register the verified worktree as a local marketplace source under a distinct development marketplace name, install from that source, and do not overwrite an unrelated marketplace entry.
+If the marketplace tracks only `main` and the feature branch has not been merged, register the verified worktree through `/Users/seongho/.codex/local-marketplaces/seongho-ops-tdd-dev` under the distinct `seongho-ops-tdd-dev` marketplace name. Install `seongho-ops@seongho-ops-tdd-dev` and do not overwrite the existing remote marketplace entry.
 
 - [ ] **Step 4: Verify installed artifacts**
 
@@ -255,9 +255,9 @@ codex plugin list --json
 Resolve the installed cache path from that output, then verify:
 
 ```bash
-node -e 'const fs=require("node:fs"); const p=process.argv[1]; const m=JSON.parse(fs.readFileSync(p+"/.codex-plugin/plugin.json","utf8")); if(m.version!=="0.3.0") process.exit(1)' "/Users/seongho/.codex/plugins/cache/seongho-ops/seongho-ops/0.3.0"
-test -f "/Users/seongho/.codex/plugins/cache/seongho-ops/seongho-ops/0.3.0/skills/test-driven-development/SKILL.md"
-rg -n "allow_implicit_invocation: true" "/Users/seongho/.codex/plugins/cache/seongho-ops/seongho-ops/0.3.0/skills/test-driven-development/agents/openai.yaml"
+node -e 'const fs=require("node:fs"); const p=process.argv[1]; const m=JSON.parse(fs.readFileSync(p+"/.codex-plugin/plugin.json","utf8")); if(m.version!=="0.3.0") process.exit(1)' "/Users/seongho/.codex/plugins/cache/seongho-ops-tdd-dev/seongho-ops/0.3.0"
+test -f "/Users/seongho/.codex/plugins/cache/seongho-ops-tdd-dev/seongho-ops/0.3.0/skills/test-driven-development/SKILL.md"
+rg -n "allow_implicit_invocation: true" "/Users/seongho/.codex/plugins/cache/seongho-ops-tdd-dev/seongho-ops/0.3.0/skills/test-driven-development/agents/openai.yaml"
 ```
 
 Expected: installed version `0.3.0`, packaged `SKILL.md`, and implicit invocation enabled.
