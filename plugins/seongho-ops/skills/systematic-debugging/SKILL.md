@@ -29,4 +29,3 @@ After three failed fix attempts, stop and question the assumptions or architectu
 ## Common Mistakes
 
 Do not bundle speculative fixes, patch a downstream symptom, infer causation from correlation, or treat a senior opinion, deadline, or sunk cost as evidence.
-
