@@ -1,11 +1,14 @@
 # Seongho Ops
 
-`seongho-ops` combines portable test-driven development and performance engineering guidance, Codex operational routing, protected Vercel preview access for the Codex in-app browser, and Seongho's personal `k` utility for force-stopping processes that own explicitly named local ports.
+`seongho-ops` combines lightweight development-process guidance, Codex operational routing, protected Vercel preview access for the Codex in-app browser, and Seongho's personal `k` utility for force-stopping processes that own explicitly named local ports.
 
 ## What it adds
 
 - `seongho-ops:cli-routing`: selects purpose-built local CLIs for external services, authentication, infrastructure, databases, deployment, observability, browser QA, runtimes, AI coding tools, and state-changing Git work.
 - `seongho-ops:vercel-preview-browser`: uses the authenticated Vercel CLI to obtain a deployment-protection cookie and injects it into the Codex in-app browser through its permitted CDP capability.
+- `seongho-ops:brainstorming`: resolves material design uncertainty before implementation while letting clear, reversible work proceed without a mandatory spec.
+- `seongho-ops:verification-before-completion`: requires fresh, claim-sized evidence before completion reports, commits, pushes, pull requests, handoffs, or moving to the next task.
+- `seongho-ops:systematic-debugging`: reproduces and traces failures, tests one falsifiable cause, and verifies the original symptom before accepting a fix.
 - `seongho-ops:test-driven-development`: requires a failing test before production code for features, bug fixes, refactors, and behavior changes.
 - `seongho-ops:performance-engineering`: activates only for explicit performance work; it requires comparable end-to-end measurement, read-only frontend/backend/database triage, authorized mutation scope, and one measured bottleneck per cycle without default cache, index, or concurrency choices.
 - `k <port> [port...]`: finds listeners with `lsof` and sends `SIGKILL` to each matching process.
@@ -30,6 +33,15 @@ plugins/seongho-ops/
     references/auth-recovery.md
     scripts/k
   skills/vercel-preview-browser/
+    SKILL.md
+    agents/openai.yaml
+  skills/brainstorming/
+    SKILL.md
+    agents/openai.yaml
+  skills/verification-before-completion/
+    SKILL.md
+    agents/openai.yaml
+  skills/systematic-debugging/
     SKILL.md
     agents/openai.yaml
   skills/test-driven-development/

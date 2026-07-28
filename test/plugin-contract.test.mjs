@@ -24,11 +24,23 @@ test('plugin manifest exposes the packaged skill directory', async () => {
   const packageJson = await readJson(path.join(root, 'package.json'));
 
   assert.equal(manifest.name, 'seongho-ops');
-  assert.equal(manifest.version, '0.4.0');
-  assert.equal(packageJson.version, '0.4.0');
+  assert.equal(manifest.version, '0.5.0');
+  assert.equal(packageJson.version, '0.5.0');
   assert.equal(manifest.skills, './skills/');
   assert.equal(manifest.interface.composerIcon, './assets/plugin-icon.svg');
   assert.equal(manifest.interface.logo, './assets/plugin-icon.svg');
+  assert.ok(manifest.interface.capabilities.includes('Brainstorming'));
+  assert.ok(manifest.interface.capabilities.includes('Completion verification'));
+  assert.ok(manifest.interface.capabilities.includes('Systematic debugging'));
+  assert.ok(
+    manifest.interface.defaultPrompt.some((prompt) => prompt.includes('Clarify this change')),
+  );
+  assert.ok(
+    manifest.interface.defaultPrompt.some((prompt) => prompt.includes('Verify this work')),
+  );
+  assert.ok(
+    manifest.interface.defaultPrompt.some((prompt) => prompt.includes('Debug this failure')),
+  );
 });
 
 test('protected preview skill keeps cookie handling inside the runtime helper', async () => {
