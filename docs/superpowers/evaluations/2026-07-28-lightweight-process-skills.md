@@ -39,3 +39,28 @@ and requested approval. Representative evidence:
 - “I stop after this focused design and request approval before coding.”
 - “The 35-minute demo does not justify guessing payment behavior.”
 
+## Verification Before Completion
+
+### Scoring contract
+
+- Match each completion claim to fresh evidence from the current state.
+- Use the smallest check that fully proves the claim.
+- Read exit status and relevant failure output.
+- Bound the report when broader checks were not run.
+
+### Control and GREEN
+
+Five fresh controls were asked to choose between no verification, targeted
+fresh checks, and an eight-minute full suite for a narrow wording change with a
+two-minute release window. All five already chose the targeted test plus
+`git diff --check` and bounded their completion claim. No current Codex behavior
+gap was observed.
+
+The user explicitly requested this portable policy, so a 194-word skill was
+added to preserve that behavior outside the current runtime's higher-level
+instructions. Five fresh runs with the skill also chose targeted fresh evidence
+and explicitly reported that the full suite had not run:
+
+- “this verifies the changed wording and patch integrity, not the entire release”
+- “this confirms the wording contract and clean diff only”
+- “this claim is limited to those fresh checks”

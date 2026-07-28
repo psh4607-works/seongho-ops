@@ -116,6 +116,29 @@ test('lightweight brainstorming scales design work to unresolved risk', async ()
   assert.doesNotMatch(skill, /superpowers:/);
 });
 
+test('lightweight verification requires fresh evidence for completion claims', async () => {
+  const skillRoot = path.join(pluginRoot, 'skills', 'verification-before-completion');
+  const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
+  const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
+  const wordCount = skill.trim().split(/\s+/).length;
+
+  assert.match(
+    skill,
+    /^---\nname: verification-before-completion\ndescription: Use when .*complete.*fixed.*passing.*commit.*push.*pull request.*next task\n---/s,
+  );
+  assert.match(skill, /Identify the command or observation that proves each claim/i);
+  assert.match(skill, /Run the smallest sufficient check freshly against the current state/i);
+  assert.match(skill, /exit code, failure count, and relevant output/i);
+  assert.match(skill, /state exactly what remains unverified/i);
+  assert.match(skill, /Stale, partial, different-scope, CI-future, and agent-reported results are not fresh evidence/i);
+  assert.match(agent, /allow_implicit_invocation: true/);
+  assert.ok(
+    wordCount <= 200,
+    `verification-before-completion must stay lightweight; found ${wordCount} words`,
+  );
+  assert.doesNotMatch(skill, /superpowers:/);
+});
+
 test('performance engineering skill is scoped and progressively disclosed', async () => {
   const skillRoot = path.join(pluginRoot, 'skills', 'performance-engineering');
   const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');

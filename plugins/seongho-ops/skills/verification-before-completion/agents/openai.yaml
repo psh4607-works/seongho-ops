@@ -1,0 +1,7 @@
+interface:
+  display_name: "Verification Before Completion"
+  short_description: "Use fresh evidence for completion claims"
+  default_prompt: "Use $seongho-ops:verification-before-completion to verify the current work before reporting completion."
+
+policy:
+  allow_implicit_invocation: true
