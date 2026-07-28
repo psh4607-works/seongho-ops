@@ -1,0 +1,7 @@
+interface:
+  display_name: "Brainstorming"
+  short_description: "Resolve material design uncertainty before implementation"
+  default_prompt: "Use $seongho-ops:brainstorming to clarify this change and recommend the smallest sound design."
+
+policy:
+  allow_implicit_invocation: true

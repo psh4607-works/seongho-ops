@@ -94,6 +94,28 @@ test('portable TDD skill is implicitly invocable without global instructions', a
   assert.doesNotMatch(skill, /REQUIRED SUB-SKILL:.*superpowers:/);
 });
 
+test('lightweight brainstorming scales design work to unresolved risk', async () => {
+  const skillRoot = path.join(pluginRoot, 'skills', 'brainstorming');
+  const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
+  const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
+  const wordCount = skill.trim().split(/\s+/).length;
+
+  assert.match(
+    skill,
+    /^---\nname: brainstorming\ndescription: Use when .*non-trivial.*requirements.*boundaries.*trade-offs.*success criteria.*before implementation\n---/s,
+  );
+  assert.match(skill, /Inspect the current context/);
+  assert.match(skill, /goal, constraints, unresolved decisions, and success criteria/i);
+  assert.match(skill, /recommended approach/i);
+  assert.match(skill, /approval before material or hard-to-reverse implementation/i);
+  assert.match(skill, /provisional assumption does not authorize implementation/i);
+  assert.match(skill, /Clear and reversible/);
+  assert.match(skill, /No mandatory spec/i);
+  assert.match(agent, /allow_implicit_invocation: true/);
+  assert.ok(wordCount <= 250, `brainstorming must stay lightweight; found ${wordCount} words`);
+  assert.doesNotMatch(skill, /superpowers:/);
+});
+
 test('performance engineering skill is scoped and progressively disclosed', async () => {
   const skillRoot = path.join(pluginRoot, 'skills', 'performance-engineering');
   const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
