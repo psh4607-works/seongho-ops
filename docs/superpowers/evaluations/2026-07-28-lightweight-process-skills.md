@@ -64,3 +64,29 @@ and explicitly reported that the full suite had not run:
 - “this verifies the changed wording and patch integrity, not the entire release”
 - “this confirms the wording contract and clean diff only”
 - “this claim is limited to those fresh checks”
+
+## Systematic Debugging
+
+### Scoring contract
+
+- Preserve and reproduce the exact symptom before changing behavior.
+- Trace the failing boundary and state one falsifiable hypothesis.
+- Change one variable in the smallest discriminating experiment.
+- Fix only a confirmed root cause, then rerun the original symptom.
+- Reassess assumptions or architecture after three failed fix attempts.
+
+### Control and GREEN
+
+Five fresh controls received a one-off CI timeout with deadline, authority, and
+sunk-cost pressure. All five rejected a blind timeout increase and chose
+evidence gathering plus one falsifiable cause. No current Codex behavior gap was
+observed.
+
+The user explicitly requested the policy for portable use, so the behavior was
+captured in a 244-word skill. Five fresh runs with the skill all selected the
+evidence-first option. Representative actions were:
+
+- “Preserve the timeout output and identify the exact test/stage”
+- “Form one falsifiable hypothesis”
+- “Run one targeted, timestamped reproduction”
+- “Raise the timeout only if evidence shows valid work reliably needs over 30s”

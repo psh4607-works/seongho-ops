@@ -139,6 +139,28 @@ test('lightweight verification requires fresh evidence for completion claims', a
   assert.doesNotMatch(skill, /superpowers:/);
 });
 
+test('lightweight systematic debugging requires evidence before fixes', async () => {
+  const skillRoot = path.join(pluginRoot, 'skills', 'systematic-debugging');
+  const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
+  const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
+  const wordCount = skill.trim().split(/\s+/).length;
+
+  assert.match(
+    skill,
+    /^---\nname: systematic-debugging\ndescription: Use when .*bug.*test failure.*flaky.*incident.*build.*integration.*unexpected behavior.*before .*fix\n---/s,
+  );
+  assert.match(skill, /Capture the exact symptom, error, environment, and relevant recent change/i);
+  assert.match(skill, /Reproduce the smallest case/i);
+  assert.match(skill, /State one falsifiable hypothesis/i);
+  assert.match(skill, /Run the smallest discriminating experiment; change one variable/i);
+  assert.match(skill, /add a failing reproduction test/i);
+  assert.match(skill, /Rerun the original symptom and relevant regression checks/i);
+  assert.match(skill, /After three failed fix attempts, stop and question the assumptions or architecture/i);
+  assert.match(agent, /allow_implicit_invocation: true/);
+  assert.ok(wordCount <= 250, `systematic-debugging must stay lightweight; found ${wordCount} words`);
+  assert.doesNotMatch(skill, /superpowers:/);
+});
+
 test('performance engineering skill is scoped and progressively disclosed', async () => {
   const skillRoot = path.join(pluginRoot, 'skills', 'performance-engineering');
   const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
