@@ -75,6 +75,23 @@ test('cli-routing keeps hard routes and auth recovery in lazy references', async
   assert.match(auth, /# CLI Authentication Recovery/);
 });
 
+test('cli-routing routes Cloudflare developer operations through Wrangler', async () => {
+  const skillRoot = path.join(pluginRoot, 'skills', 'cli-routing');
+  const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
+  const routes = await readFile(path.join(skillRoot, 'references', 'routes.md'), 'utf8');
+  const auth = await readFile(path.join(skillRoot, 'references', 'auth-recovery.md'), 'utf8');
+
+  assert.match(skill, /cloudflare:wrangler/);
+  assert.match(routes, /Cloudflare Developer Platform/);
+  assert.match(routes, /`wrangler`[\s\S]*`npx wrangler`/);
+  assert.match(routes, /cloudflare:wrangler/);
+  assert.match(routes, /official Cloudflare documentation/);
+  assert.match(routes, /project-local Wrangler/);
+  assert.match(routes, /account[\s\S]*environment[\s\S]*before remote writes/);
+  assert.match(routes, /dry-run/);
+  assert.match(auth, /`wrangler`[\s\S]*`wrangler login`[\s\S]*`wrangler whoami --json`/);
+});
+
 test('package and skill wrapper expose only k', async () => {
   const packageJson = await readJson(path.join(root, 'package.json'));
   const wrapper = await readFile(

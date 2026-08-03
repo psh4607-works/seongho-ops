@@ -17,7 +17,7 @@ If an exempt investigation expands into service-facing, remote, package/runtime,
 
 1. Classify the operation before choosing a command.
 2. For service-facing CLI work, read `references/routes.md` completely and follow its hard routes.
-3. Load narrower matching skills afterward, especially `argocd` and `supabase`.
+3. Load narrower matching skills afterward, especially `argocd`, `supabase`, and `cloudflare:wrangler`.
 4. Use `command -v` and the narrowest `--help` when the installed command or syntax has not been proven in the current turn.
 5. Diagnose read-only first, execute only the requested scope, and verify mutations when practical.
 6. For genuine missing or expired auth, read `references/auth-recovery.md` completely before login, OAuth, device-code, SSO, or browser-assisted recovery.

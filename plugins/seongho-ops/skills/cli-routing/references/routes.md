@@ -10,6 +10,7 @@ Read this reference completely before selecting a CLI for service-facing, remote
 | Datadog | `pup` | Hard route: prefer `--read-only`. Never use a Datadog connector or MCP. |
 | Sentry | `sentry` | Hard route: never use a Sentry connector, MCP, or old plugin. Use `sentry-cli` only for legacy compatibility and never pass `--show-token`. |
 | OpenSearch | `opensearch-cli` | Use the configured profile and inspect subcommand help. |
+| Cloudflare Developer Platform | `wrangler`, `npx wrangler`, package-manager equivalents | Hard route: load `cloudflare:wrangler` before selecting or running commands. Prefer the project-local Wrangler, and retrieve current syntax and configuration guidance from official Cloudflare documentation and the installed config schema. Confirm the account or auth profile and environment before remote writes; use a supported dry-run first and verify the resulting remote state. |
 | Deploy / cloud | `vercel`, `databricks`, `aws`, `gcloud`, `cloudflared` | Select project, profile, region, and environment explicitly when needed. For a protected `*.vercel.app` preview in the Codex in-app browser, load `seongho-ops:vercel-preview-browser` and the bundled Browser skill. |
 | Secrets / containers | `vault`, `op`, `docker`, `docker compose` | Check session or daemon status without exposing secrets. |
 | Browser QA | `playwright` | Follow global browser routing; rendered state requires a supported browser path. |

@@ -54,6 +54,7 @@ Always re-check `--help` because installed versions can change.
 | `aws` | `aws sso login --profile <profile>` when the profile is SSO-backed | `aws sts get-caller-identity --profile <profile>` with identity output minimized |
 | `gcloud` | `gcloud auth login` or the profile's official application-default flow when that is what the task needs | suppress output from `gcloud auth print-access-token`, then retry the intended read |
 | `cloudflared` | `cloudflared tunnel login` | a minimized read-only tunnel list |
+| `wrangler` | Inspect the project-local CLI's auth help, then use the official `wrangler login` OAuth flow | `wrangler whoami --json`, with identity details minimized; then retry the intended operation once |
 | `vault` | Use the configured provider method, commonly `vault login -method=oidc`; never invent a method | `vault token lookup` with sensitive output suppressed |
 | `notion` | Inspect `notion auth login --help` and use its official flow | `notion auth status` |
 | `op` | `op signin` using the configured account | `op whoami` only when identity matters; otherwise a minimized account/session check |
