@@ -24,11 +24,23 @@ test('plugin manifest exposes the packaged skill directory', async () => {
   const packageJson = await readJson(path.join(root, 'package.json'));
 
   assert.equal(manifest.name, 'seongho-ops');
-  assert.equal(manifest.version, '0.4.0');
-  assert.equal(packageJson.version, '0.4.0');
+  assert.equal(manifest.version, '0.5.0');
+  assert.equal(packageJson.version, '0.5.0');
   assert.equal(manifest.skills, './skills/');
   assert.equal(manifest.interface.composerIcon, './assets/plugin-icon.svg');
   assert.equal(manifest.interface.logo, './assets/plugin-icon.svg');
+  assert.ok(manifest.interface.capabilities.includes('Brainstorming'));
+  assert.ok(manifest.interface.capabilities.includes('Completion verification'));
+  assert.ok(manifest.interface.capabilities.includes('Systematic debugging'));
+  assert.ok(
+    manifest.interface.defaultPrompt.some((prompt) => prompt.includes('Clarify this change')),
+  );
+  assert.ok(
+    manifest.interface.defaultPrompt.some((prompt) => prompt.includes('Verify this work')),
+  );
+  assert.ok(
+    manifest.interface.defaultPrompt.some((prompt) => prompt.includes('Debug this failure')),
+  );
 });
 
 test('protected preview skill keeps cookie handling inside the runtime helper', async () => {
@@ -92,6 +104,73 @@ test('portable TDD skill is implicitly invocable without global instructions', a
   assert.match(skill, /explicit user approval/);
   assert.match(agent, /allow_implicit_invocation: true/);
   assert.doesNotMatch(skill, /REQUIRED SUB-SKILL:.*superpowers:/);
+});
+
+test('lightweight brainstorming scales design work to unresolved risk', async () => {
+  const skillRoot = path.join(pluginRoot, 'skills', 'brainstorming');
+  const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
+  const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
+  const wordCount = skill.trim().split(/\s+/).length;
+
+  assert.match(
+    skill,
+    /^---\nname: brainstorming\ndescription: Use when .*non-trivial.*requirements.*boundaries.*trade-offs.*success criteria.*before implementation\n---/s,
+  );
+  assert.match(skill, /Inspect the current context/);
+  assert.match(skill, /goal, constraints, unresolved decisions, and success criteria/i);
+  assert.match(skill, /recommended approach/i);
+  assert.match(skill, /approval before material or hard-to-reverse implementation/i);
+  assert.match(skill, /provisional assumption does not authorize implementation/i);
+  assert.match(skill, /Clear and reversible/);
+  assert.match(skill, /No mandatory spec/i);
+  assert.match(agent, /allow_implicit_invocation: true/);
+  assert.ok(wordCount <= 250, `brainstorming must stay lightweight; found ${wordCount} words`);
+  assert.doesNotMatch(skill, /superpowers:/);
+});
+
+test('lightweight verification requires fresh evidence for completion claims', async () => {
+  const skillRoot = path.join(pluginRoot, 'skills', 'verification-before-completion');
+  const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
+  const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
+  const wordCount = skill.trim().split(/\s+/).length;
+
+  assert.match(
+    skill,
+    /^---\nname: verification-before-completion\ndescription: Use when .*complete.*fixed.*passing.*commit.*push.*pull request.*next task\n---/s,
+  );
+  assert.match(skill, /Identify the command or observation that proves each claim/i);
+  assert.match(skill, /Run the smallest sufficient check freshly against the current state/i);
+  assert.match(skill, /exit code, failure count, and relevant output/i);
+  assert.match(skill, /state exactly what remains unverified/i);
+  assert.match(skill, /Stale, partial, different-scope, CI-future, and agent-reported results are not fresh evidence/i);
+  assert.match(agent, /allow_implicit_invocation: true/);
+  assert.ok(
+    wordCount <= 200,
+    `verification-before-completion must stay lightweight; found ${wordCount} words`,
+  );
+  assert.doesNotMatch(skill, /superpowers:/);
+});
+
+test('lightweight systematic debugging requires evidence before fixes', async () => {
+  const skillRoot = path.join(pluginRoot, 'skills', 'systematic-debugging');
+  const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
+  const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
+  const wordCount = skill.trim().split(/\s+/).length;
+
+  assert.match(
+    skill,
+    /^---\nname: systematic-debugging\ndescription: Use when .*bug.*test failure.*flaky.*incident.*build.*integration.*unexpected behavior.*before .*fix\n---/s,
+  );
+  assert.match(skill, /Capture the exact symptom, error, environment, and relevant recent change/i);
+  assert.match(skill, /Reproduce the smallest case/i);
+  assert.match(skill, /State one falsifiable hypothesis/i);
+  assert.match(skill, /Run the smallest discriminating experiment; change one variable/i);
+  assert.match(skill, /add a failing reproduction test/i);
+  assert.match(skill, /Rerun the original symptom and relevant regression checks/i);
+  assert.match(skill, /After three failed fix attempts, stop and question the assumptions or architecture/i);
+  assert.match(agent, /allow_implicit_invocation: true/);
+  assert.ok(wordCount <= 250, `systematic-debugging must stay lightweight; found ${wordCount} words`);
+  assert.doesNotMatch(skill, /superpowers:/);
 });
 
 test('performance engineering skill is scoped and progressively disclosed', async () => {

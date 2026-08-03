@@ -1,7 +1,7 @@
 {
   "name": "seongho-ops",
-  "version": "0.4.0",
-  "description": "Guides production changes through TDD and measured performance engineering, routes operational work to purpose-built local CLIs, opens protected Vercel previews, and packages Seongho's port cleanup utility.",
+  "version": "0.5.0",
+  "description": "Guides design, debugging, verification, TDD, and measured performance work; routes operational CLIs; opens protected previews; and packages Seongho's port cleanup utility.",
   "author": {
     "name": "Seongho",
     "url": "https://github.com/psh4607"
@@ -24,8 +24,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Seongho Ops",
-    "shortDescription": "Guide code changes with TDD and measured performance work, route operational CLI work, open protected previews, and provide k.",
-    "longDescription": "Seongho Ops provides implicitly invocable test-driven development and performance engineering skills. The performance skill establishes an end-to-end baseline, read-only cross-layer triage, authorized mutation scope, and one measured bottleneck per cycle. It also selects the correct authenticated local CLI for operational work, securely opens protected Vercel previews in the Codex browser, and bundles the k command for force-stopping processes that own explicitly requested local ports.",
+    "shortDescription": "Guide design, debugging, verification, TDD, and measured performance work; route operational CLIs; open previews; and provide k.",
+    "longDescription": "Seongho Ops provides lightweight, implicitly invocable brainstorming, systematic debugging, completion verification, test-driven development, and performance engineering skills. It also selects the correct authenticated local CLI for operational work, securely opens protected Vercel previews in the Codex browser, and bundles the k command for force-stopping processes that own explicitly requested local ports.",
     "developerName": "Seongho",
     "category": "Developer Tools",
     "capabilities": [
@@ -34,6 +34,9 @@
       "Authentication recovery",
       "Protected Vercel preview access",
       "Process management",
+      "Brainstorming",
+      "Completion verification",
+      "Systematic debugging",
       "Test-driven development",
       "Performance engineering",
       "Performance measurement and profiling"
@@ -47,6 +50,9 @@
       "Diagnose this CLI authentication failure safely.",
       "Open this protected Vercel preview in the Codex browser.",
       "Free this local port with the bundled k command.",
+      "Clarify this change before implementation.",
+      "Verify this work before reporting completion.",
+      "Debug this failure from evidence before proposing a fix.",
       "Implement this code change with test-driven development.",
       "Measure this bottleneck and meet its performance target without guessing."
     ]

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Systematic Debugging"
+  short_description: "Find and prove root causes before fixing symptoms"
+  default_prompt: "Use $seongho-ops:systematic-debugging to investigate this failure and test one evidence-backed cause."
+
+policy:
+  allow_implicit_invocation: true
