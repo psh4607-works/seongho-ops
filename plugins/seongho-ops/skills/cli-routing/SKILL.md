@@ -40,6 +40,7 @@ k <port> [port...]
 ## Failure and safety
 
 - Distinguish auth, RBAC, rate limit, network, wrong target/profile, and capability failures.
+- Treat RBAC as authority-, resource-, target-, and action-scoped. For Argo CD, follow `references/routes.md` and the `argocd` skill before declaring an operation impossible.
 - Prefer filtered structured output. Never print tokens, cookies, passwords, private keys, or complete credentials.
 - Do not loop login or refresh attempts.
 - Name prod versus exp/staging before mutations.

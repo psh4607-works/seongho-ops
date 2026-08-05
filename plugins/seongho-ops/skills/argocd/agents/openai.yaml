@@ -1,0 +1,7 @@
+interface:
+  display_name: "Argo CD"
+  short_description: "Operate Argo CD with exact auth and RBAC capability checks"
+  default_prompt: "Use $seongho-ops:argocd to inspect or operate this Argo CD application without conflating Kubernetes, project, and application RBAC."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,7 +1,7 @@
 {
   "name": "seongho-ops",
-  "version": "0.5.0",
-  "description": "Lightweight development process guidance, operational CLI utilities, CLI routing, and protected Vercel preview access for Codex.",
+  "version": "0.6.0",
+  "description": "Lightweight development process guidance, Argo CD operations, operational CLI utilities, CLI routing, and protected Vercel preview access for Codex.",
   "type": "module",
   "private": false,
   "license": "MIT",

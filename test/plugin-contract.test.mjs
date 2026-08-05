@@ -24,14 +24,15 @@ test('plugin manifest exposes the packaged skill directory', async () => {
   const packageJson = await readJson(path.join(root, 'package.json'));
 
   assert.equal(manifest.name, 'seongho-ops');
-  assert.equal(manifest.version, '0.5.0');
-  assert.equal(packageJson.version, '0.5.0');
+  assert.equal(manifest.version, '0.6.0');
+  assert.equal(packageJson.version, '0.6.0');
   assert.equal(manifest.skills, './skills/');
   assert.equal(manifest.interface.composerIcon, './assets/plugin-icon.svg');
   assert.equal(manifest.interface.logo, './assets/plugin-icon.svg');
   assert.ok(manifest.interface.capabilities.includes('Brainstorming'));
   assert.ok(manifest.interface.capabilities.includes('Completion verification'));
   assert.ok(manifest.interface.capabilities.includes('Systematic debugging'));
+  assert.ok(manifest.interface.capabilities.includes('Argo CD operations'));
   assert.ok(
     manifest.interface.defaultPrompt.some((prompt) => prompt.includes('Clarify this change')),
   );
@@ -73,6 +74,56 @@ test('cli-routing keeps hard routes and auth recovery in lazy references', async
   assert.match(routes, /Datadog[\s\S]*Hard route/);
   assert.match(routes, /Sentry[\s\S]*Hard route/);
   assert.match(auth, /# CLI Authentication Recovery/);
+});
+
+test('Argo CD guidance scopes RBAC decisions to the exact API capability', async () => {
+  const routingRoot = path.join(pluginRoot, 'skills', 'cli-routing');
+  const routes = await readFile(path.join(routingRoot, 'references', 'routes.md'), 'utf8');
+  const skillRoot = path.join(pluginRoot, 'skills', 'argocd');
+  const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
+  const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
+
+  assert.match(skill, /^---\nname: argocd\n/);
+  assert.match(agent, /allow_implicit_invocation: true/);
+
+  assert.match(
+    routes,
+    /Kubernetes RBAC[\s\S]*Argo CD API RBAC for `projects`[\s\S]*Argo CD API RBAC for `applications` and individual actions/i,
+  );
+  assert.match(
+    routes,
+    /`kubectl auth can-i` denial[\s\S]*must not be generalized[\s\S]*Argo CD API denial/i,
+  );
+
+  assert.match(
+    skill,
+    /argocd account can-i <action> applications '<project>\/<app>'/,
+  );
+  assert.match(
+    skill,
+    /project `get` failure[\s\S]*must not be generalized[\s\S]*application `update` or `sync` failure/i,
+  );
+  assert.match(
+    skill,
+    /`kubectl auth can-i` denial[\s\S]*must not be generalized[\s\S]*Argo CD API denial/i,
+  );
+
+  // Regression: the 2026-08-05 <APP_NAME> incident had denied Kubernetes and
+  // project reads while the Argo CD API still allowed Application mutations.
+  assert.match(
+    skill,
+    /`kubectl auth can-i patch applications\.argoproj\.io -n argocd`[\s\S]*`no`/i,
+  );
+  assert.match(skill, /`argocd account can-i get projects default`[\s\S]*`no`/i);
+  assert.match(
+    skill,
+    /`argocd account can-i update applications 'default\/<APP_NAME>'`[\s\S]*`yes`/i,
+  );
+  assert.match(
+    skill,
+    /`argocd account can-i sync applications 'default\/<APP_NAME>'`[\s\S]*`yes`/i,
+  );
+  assert.match(skill, /Application update and sync remain available/i);
 });
 
 test('package and skill wrapper expose only k', async () => {

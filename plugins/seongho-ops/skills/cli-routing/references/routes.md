@@ -5,7 +5,7 @@ Read this reference completely before selecting a CLI for service-facing, remote
 | Area | CLI | Route contract |
 | --- | --- | --- |
 | GitHub | `git`, `gh` | Use `gh` for PRs, issues, reviews, checks, Actions, and APIs. Follow the installed GitHub skills for review, CI, and publishing workflows. |
-| Argo / Kubernetes | `argocd`, `kubectl`, `helm`, `k9s` | Load `argocd`; prefer app-scoped Argo reads when Kubernetes RBAC blocks access. |
+| Argo / Kubernetes | `argocd`, `kubectl`, `helm`, `k9s` | Load `argocd`. Keep Kubernetes RBAC, Argo CD API RBAC for `projects`, and Argo CD API RBAC for `applications` and individual actions separate. Before declaring an Application operation impossible, probe `argocd account can-i <action> applications '<project>/<app>'`. A `kubectl auth can-i` denial must not be generalized to an Argo CD API denial, and denied project `get` must not be generalized to denied Application `update` or `sync`. |
 | Supabase / DB | `supabase`, `psql`, `mongosh`, `sqlite3` | Load `supabase`; state target and environment before mutations. Load the Postgres best-practices skill for queries, schemas, and performance work. |
 | Datadog | `pup` | Hard route: prefer `--read-only`. Never use a Datadog connector or MCP. |
 | Sentry | `sentry` | Hard route: never use a Sentry connector, MCP, or old plugin. Use `sentry-cli` only for legacy compatibility and never pass `--show-token`. |

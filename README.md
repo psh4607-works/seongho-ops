@@ -1,10 +1,11 @@
 # Seongho Ops
 
-`seongho-ops` combines lightweight development-process guidance, Codex operational routing, protected Vercel preview access for the Codex in-app browser, and Seongho's personal `k` utility for force-stopping processes that own explicitly named local ports.
+`seongho-ops` combines lightweight development-process guidance, Argo CD operations, Codex operational routing, protected Vercel preview access for the Codex in-app browser, and Seongho's personal `k` utility for force-stopping processes that own explicitly named local ports.
 
 ## What it adds
 
 - `seongho-ops:cli-routing`: selects purpose-built local CLIs for external services, authentication, infrastructure, databases, deployment, observability, browser QA, runtimes, AI coding tools, and state-changing Git work.
+- `seongho-ops:argocd`: owns the durable Argo CD CLI guidance, including SSO recovery and exact Application capability probes that keep Kubernetes, project, and Application RBAC separate.
 - `seongho-ops:vercel-preview-browser`: uses the authenticated Vercel CLI to obtain a deployment-protection cookie and injects it into the Codex in-app browser through its permitted CDP capability.
 - `seongho-ops:brainstorming`: resolves material design uncertainty before implementation while letting clear, reversible work proceed without a mandatory spec.
 - `seongho-ops:verification-before-completion`: requires fresh, claim-sized evidence before completion reports, commits, pushes, pull requests, handoffs, or moving to the next task.
@@ -32,6 +33,9 @@ plugins/seongho-ops/
     references/routes.md
     references/auth-recovery.md
     scripts/k
+  skills/argocd/
+    SKILL.md
+    agents/openai.yaml
   skills/vercel-preview-browser/
     SKILL.md
     agents/openai.yaml
@@ -102,6 +106,8 @@ For local plugin development, register this checkout instead:
 codex plugin marketplace add /Users/seongho/projects/seongho/plugins/seongho-ops
 codex plugin add seongho-ops@seongho-ops
 ```
+
+The packaged `plugins/seongho-ops/skills/argocd/` directory is the source of truth for Argo CD guidance. Any standalone copy under `~/.agents/skills/argocd/` is a legacy installed copy, not a durable source-edit target.
 
 ## Safety
 
