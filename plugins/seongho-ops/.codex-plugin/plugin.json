@@ -1,7 +1,7 @@
 {
   "name": "seongho-ops",
-  "version": "0.5.0",
-  "description": "Guides design, debugging, verification, TDD, and measured performance work; routes operational CLIs; opens protected previews; and packages Seongho's port cleanup utility.",
+  "version": "0.6.0",
+  "description": "Guides design, debugging, verification, TDD, measured performance, and Argo CD operations; routes operational CLIs; opens protected previews; and packages Seongho's port cleanup utility.",
   "author": {
     "name": "Seongho",
     "url": "https://github.com/psh4607"
@@ -19,13 +19,14 @@
     "testing",
     "performance",
     "benchmarking",
-    "profiling"
+    "profiling",
+    "argocd"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Seongho Ops",
-    "shortDescription": "Guide design, debugging, verification, TDD, and measured performance work; route operational CLIs; open previews; and provide k.",
-    "longDescription": "Seongho Ops provides lightweight, implicitly invocable brainstorming, systematic debugging, completion verification, test-driven development, and performance engineering skills. It also selects the correct authenticated local CLI for operational work, securely opens protected Vercel previews in the Codex browser, and bundles the k command for force-stopping processes that own explicitly requested local ports.",
+    "shortDescription": "Guide development work and Argo CD operations; route operational CLIs; open previews; and provide k.",
+    "longDescription": "Seongho Ops provides lightweight, implicitly invocable brainstorming, systematic debugging, completion verification, test-driven development, performance engineering, and Argo CD operations skills. It separates Kubernetes, Argo CD project, and Argo CD Application RBAC; selects the correct authenticated local CLI; securely opens protected Vercel previews in the Codex browser; and bundles the k command for force-stopping processes that own explicitly requested local ports.",
     "developerName": "Seongho",
     "category": "Developer Tools",
     "capabilities": [
@@ -39,7 +40,8 @@
       "Systematic debugging",
       "Test-driven development",
       "Performance engineering",
-      "Performance measurement and profiling"
+      "Performance measurement and profiling",
+      "Argo CD operations"
     ],
     "websiteURL": "https://github.com/psh4607/seongho-ops",
     "brandColor": "#4F70E8",
@@ -53,6 +55,7 @@
       "Clarify this change before implementation.",
       "Verify this work before reporting completion.",
       "Debug this failure from evidence before proposing a fix.",
+      "Check the exact Argo CD Application capability without conflating Kubernetes or project RBAC.",
       "Implement this code change with test-driven development.",
       "Measure this bottleneck and meet its performance target without guessing."
     ]
