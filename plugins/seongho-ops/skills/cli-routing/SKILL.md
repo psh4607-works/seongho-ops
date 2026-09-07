@@ -1,6 +1,6 @@
 ---
 name: cli-routing
-description: Use before CLI work involving external services, auth, infrastructure, databases, deployment, observability, secrets, containers, browser QA, package/runtime management, AI coding tools, remote Git, state-changing Git, or the bundled k port cleanup command. Skip ordinary read-only local inspection. Load narrower matching skills afterward. Datadog and Sentry are CLI-only.
+description: Use before CLI work involving external services, auth, infrastructure, databases, deployment, observability, secrets, containers, Aside Browser tabs or CLI updates, browser QA, package/runtime management, AI coding tools, remote Git, state-changing Git, or the bundled k port cleanup command. Skip ordinary read-only local inspection. Load narrower matching skills afterward. Datadog and Sentry are CLI-only.
 ---
 
 # CLI Routing
@@ -23,6 +23,10 @@ If an exempt investigation expands into service-facing, remote, package/runtime,
 6. For genuine missing or expired auth, read `references/auth-recovery.md` completely before login, OAuth, device-code, SSO, or browser-assisted recovery.
 
 Use purpose-built connectors and service skills for Slack, Linear, Figma, and ordinary Notion work unless the user requests a CLI.
+
+## Aside Browser
+
+When the user names Aside, asks about its open tabs, or requests an Aside CLI update, use `aside` and read [references/aside.md](references/aside.md). Aside is a separate browser; do not interpret its tab list as the Codex app's side panel. Preserve an explicitly requested browser and the service routes in `references/routes.md`.
 
 ## Bundled utility
 

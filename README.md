@@ -4,7 +4,7 @@
 
 ## What it adds
 
-- `seongho-ops:cli-routing`: selects purpose-built local CLIs for external services, authentication, infrastructure, databases, deployment, observability, browser QA, runtimes, AI coding tools, and state-changing Git work.
+- `seongho-ops:cli-routing`: selects purpose-built local CLIs for external services, authentication, infrastructure, databases, deployment, observability, Aside Browser tabs and CLI updates, browser QA, runtimes, AI coding tools, and state-changing Git work.
 - `seongho-ops:argocd`: owns the durable Argo CD CLI guidance, including SSO recovery and exact Application capability probes that keep Kubernetes, project, and Application RBAC separate.
 - `seongho-ops:vercel-preview-browser`: uses the authenticated Vercel CLI to obtain a deployment-protection cookie and injects it into the Codex in-app browser through its permitted CDP capability.
 - `seongho-ops:brainstorming`: resolves material design uncertainty before implementation while letting clear, reversible work proceed without a mandatory spec.
@@ -31,6 +31,7 @@ plugins/seongho-ops/
     SKILL.md
     agents/openai.yaml
     references/routes.md
+    references/aside.md
     references/auth-recovery.md
     scripts/k
   skills/argocd/
