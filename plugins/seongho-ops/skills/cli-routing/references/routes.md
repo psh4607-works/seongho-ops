@@ -12,6 +12,7 @@ Read this reference completely before selecting a CLI for service-facing, remote
 | OpenSearch | `opensearch-cli` | Use the configured profile and inspect subcommand help. |
 | Deploy / cloud | `vercel`, `databricks`, `aws`, `gcloud`, `cloudflared` | Select project, profile, region, and environment explicitly when needed. For a protected `*.vercel.app` preview in the Codex in-app browser, load `seongho-ops:vercel-preview-browser` and the bundled Browser skill. |
 | Secrets / containers | `vault`, `op`, `docker`, `docker compose` | Check session or daemon status without exposing secrets. |
+| Aside Browser | `aside` | For Aside tabs, browser interaction, or CLI updates, read [aside.md](aside.md). Use `aside repl` for direct inspection and control; `aside exec` delegates to Aside's agent. Follow the installed CLI guides and use `aside update` for an authorized CLI update. |
 | Browser QA | `playwright` | Follow global browser routing; rendered state requires a supported browser path. |
 | Runtimes | repository package manager, `python3`/`uv`, `cargo`, JDK tools | Respect lockfiles and repository toolchains. INF Gradle/Kotlin work may require JDK 21. |
 | AI coding | `codex`, `claude`, `gemini`, `opencode`, `cursor-agent` | Keep conversational work interactive. Reserve `codex exec` for bounded disposable work. |

@@ -24,8 +24,8 @@ test('plugin manifest exposes the packaged skill directory', async () => {
   const packageJson = await readJson(path.join(root, 'package.json'));
 
   assert.equal(manifest.name, 'seongho-ops');
-  assert.equal(manifest.version, '0.6.0');
-  assert.equal(packageJson.version, '0.6.0');
+  assert.equal(manifest.version, '0.6.1');
+  assert.equal(packageJson.version, '0.6.1');
   assert.equal(manifest.skills, './skills/');
   assert.equal(manifest.interface.composerIcon, './assets/plugin-icon.svg');
   assert.equal(manifest.interface.logo, './assets/plugin-icon.svg');
