@@ -1,8 +1,17 @@
-# Aside CLI
+# Aside Browser
 
-Use `aside` for an explicitly requested Aside browser task or CLI update. Use the selected browser's existing tabs and login state; do not substitute Chrome or the Codex in-app browser. GitHub repository, PR, review, and CI data work still follows the `gh` route unless the user requests browser UI interaction.
+Use the selected Aside browser's existing tabs and login state. Preserve an explicitly requested browser, account, host, or CLI interface. GitHub repository, PR, review, and CI data work still follows the `gh` route unless the user requests browser UI interaction; the other service routes also remain in effect.
 
-## Discover the installed interface
+## Choose the interface
+
+- Prefer Aside MCP's `repl` tool for tab inspection and browser interaction, especially a sequence of snapshots, form entries, and navigation. Its REPL context persists across calls in the same session.
+- Use `aside` for installed guides, site skills, account/host management, version checks, authorized updates, shell scripts, and explicit CLI requests.
+- If the MCP tool is unavailable or its connection fails, use `aside repl` against the same account, host, and target tab. State the connection issue and fallback. A stale element or page-state error calls for a fresh snapshot or attachment, not an automatic transport switch.
+- MCP availability does not imply authorization to delegate. Both MCP `exec` and `aside exec` start work by Aside's own agent; use them only within the session's authorization for agent work.
+
+## Read the installed guidance
+
+When the CLI is available, discover its current interface:
 
 ```bash
 command -v aside
@@ -10,28 +19,35 @@ aside --help
 aside guide
 ```
 
-The installed CLI serves its version-matched guide. Read it before choosing a mode; do not copy an old command catalog into this skill. If the executable is missing, report that separately from an authentication or browser connection failure.
+Before using either REPL interface, read `aside guide repl`, check `aside skills list`, and read a matching site skill with `aside skills show <name>`. The installed CLI serves version-matched guidance; do not copy an old command catalog into this skill.
 
-## Inspect and control tabs directly
+If the CLI is missing but MCP is connected, use the MCP tool's documented interface and any available site guidance. Report a missing required capability separately from authentication or connection failure; do not install or update software merely to inspect tabs.
 
-Read `aside guide repl` before using `aside repl`. Check `aside skills list` and read a matching site skill with `aside skills show <name>` before interacting with that service.
+## Inspect and control tabs
 
-For an open-tab inventory, the REPL guide provides a read-only call that does not attach to or open a tab:
+For a read-only inventory, send this JavaScript to MCP REPL or a CLI REPL:
 
-```bash
-aside repl 'const openTabs = await listBrowserTabs(); console.log(openTabs.map(tab => ({ targetId: tab.targetId, active: tab.active, title: tab.title, url: tab.url })));'
+```js
+const openTabs = await listBrowserTabs();
+console.log(openTabs.map(tab => ({ targetId: tab.targetId, active: tab.active, title: tab.title, url: tab.url })));
 ```
 
 - Resolve an existing matching tab before opening another. Use `attachBrowserTab(targetId)` with an observed ID; use `attachActiveBrowserTab()` only for a request about the active page. Do not assume the initial `page` is the user's current tab.
-- Read the attached page with `snapshot(page, { interactive: true })`. Follow the guide's element references and refresh the snapshot after actions.
-- Use the documented `openTab(url)` and `closeTab(tab)` helpers for tab management. Keep listing tasks read-only.
-- Follow the installed guide for persistent REPL bindings and account/host selection. A missing tab on one account or host does not prove every Aside window is empty.
+- Read the attached page with `snapshot(page, { interactive: true })`. Follow its element references and refresh the snapshot after actions.
+- Use the documented `openTab(url)` and `closeTab(tab)` helpers. Keep listing tasks read-only.
+- Follow the installed guide for account/host selection. A missing tab on one account or host does not prove every Aside window is empty.
 
-## Delegate a browsing task
+## Keep REPL state scoped to its session
 
-`aside exec` starts a task handled by Aside's own agent. It is a delegation, while `aside repl` lets the current agent inspect and operate the browser directly. Use delegation only within the session's authorization for agent work, and follow the guide's session status, steering, and completion workflow. A simple tab inventory can use the direct REPL call above.
+MCP REPL and an interactive `aside repl` process can retain bindings within their own session. Use fresh variable names and reconnect after a session restart or transport switch.
 
-## Update the CLI
+A one-shot `aside repl "…"` closes its temporary REPL session afterward. Each invocation must resolve and attach its target tab in that same invocation before operating on it; a `page`, variable, or attachment from a previous command is not available. Inspect new state before choosing the next action. Verify temporary download paths within the command that produced them.
+
+For a sequence of CLI actions, retain one interactive `aside repl` process or make each one-shot command self-contained. Do not repeatedly retry an action against a null `page`.
+
+## Update the CLI only when authorized
+
+An update notification or a companion skill's instruction to always update is not user authorization. Use the working installed version for ordinary browser tasks. If a missing feature requires an upgrade, explain the blocker and obtain authorization unless it already exists in the session.
 
 When the user requests or has authorized an Aside CLI update:
 
@@ -42,4 +58,4 @@ aside update
 aside --version
 ```
 
-Report the updater result and final CLI version. If it says the current version is already up to date, report that without claiming a new version was installed. Refresh `aside guide` and the relevant mode help after a version change before relying on old commands. Updating this routing plugin does not itself update the Aside executable; run its updater separately when requested. Routine browser use does not imply permission to upgrade it.
+Report the updater result and final CLI version. Already up to date, an installation prompt, and a completed installation are different outcomes. Refresh `aside guide` and the relevant mode help after a version change. Updating this routing plugin does not itself update the Aside executable.

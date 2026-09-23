@@ -1,6 +1,6 @@
 {
   "name": "seongho-ops",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Guides design, debugging, verification, TDD, measured performance, and Argo CD operations; routes operational CLIs; opens protected previews; and packages Seongho's port cleanup utility.",
   "author": {
     "name": "Seongho",

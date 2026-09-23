@@ -1,11 +1,11 @@
 ---
 name: cli-routing
-description: Use before CLI work involving external services, auth, infrastructure, databases, deployment, observability, secrets, containers, Aside Browser tabs or CLI updates, browser QA, package/runtime management, AI coding tools, remote Git, state-changing Git, or the bundled k port cleanup command. Skip ordinary read-only local inspection. Load narrower matching skills afterward. Datadog and Sentry are CLI-only.
+description: Use before operational CLI work or Aside Browser interaction involving external services, auth, infrastructure, databases, deployment, observability, secrets, containers, browser QA, package/runtime management, AI coding tools, remote Git, state-changing Git, or the bundled k port cleanup command. Skip ordinary read-only local inspection. Load narrower matching skills afterward. Datadog and Sentry are CLI-only.
 ---
 
 # CLI Routing
 
-Route operational work to the correct local CLI without taxing ordinary local inspection.
+Route operational work to the correct local CLI and Aside browser interaction to MCP REPL without taxing ordinary local inspection.
 
 ## Scope
 
@@ -26,7 +26,7 @@ Use purpose-built connectors and service skills for Slack, Linear, Figma, and or
 
 ## Aside Browser
 
-When the user names Aside, asks about its open tabs, or requests an Aside CLI update, use `aside` and read [references/aside.md](references/aside.md). Aside is a separate browser; do not interpret its tab list as the Codex app's side panel. Preserve an explicitly requested browser and the service routes in `references/routes.md`.
+When the user names Aside, asks about its open tabs, or requests an Aside CLI update, read [references/aside.md](references/aside.md). Prefer Aside MCP REPL for browser inspection and interaction. Use the CLI for guides, management, shell scripts, explicit CLI requests, and fallback when MCP is unavailable. Aside is a separate browser; do not interpret its tab list as the Codex app's side panel. Preserve an explicitly requested browser and the service routes in `references/routes.md`.
 
 ## Bundled utility
 

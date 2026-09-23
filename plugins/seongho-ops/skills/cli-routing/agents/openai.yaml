@@ -1,7 +1,7 @@
 interface:
   display_name: "CLI Routing"
-  short_description: "Route developer and operations work to the right local CLI"
-  default_prompt: "Use $seongho-ops:cli-routing to select, verify, and safely run the correct local CLI for this task."
+  short_description: "Route operational CLIs and Aside browser interaction"
+  default_prompt: "Use $seongho-ops:cli-routing to select and verify the right operational CLI or Aside MCP REPL for this task."
 
 policy:
   allow_implicit_invocation: true

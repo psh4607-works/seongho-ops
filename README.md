@@ -4,7 +4,7 @@
 
 ## What it adds
 
-- `seongho-ops:cli-routing`: selects purpose-built local CLIs for external services, authentication, infrastructure, databases, deployment, observability, Aside Browser tabs and CLI updates, browser QA, runtimes, AI coding tools, and state-changing Git work.
+- `seongho-ops:cli-routing`: selects purpose-built local CLIs for external services, authentication, infrastructure, databases, deployment, observability, browser QA, runtimes, AI coding tools, and state-changing Git work; prefers Aside MCP REPL for Aside browser interaction.
 - `seongho-ops:argocd`: owns the durable Argo CD CLI guidance, including SSO recovery and exact Application capability probes that keep Kubernetes, project, and Application RBAC separate.
 - `seongho-ops:vercel-preview-browser`: uses the authenticated Vercel CLI to obtain a deployment-protection cookie and injects it into the Codex in-app browser through its permitted CDP capability.
 - `seongho-ops:brainstorming`: resolves material design uncertainty before implementation while letting clear, reversible work proceed without a mandatory spec.
@@ -18,6 +18,8 @@
 The Vercel helper keeps the bypass value inside the local Node/browser runtime. It never returns the cookie to the model, never puts the bypass secret in a URL, and removes its temporary cookie jar after injection. Application login is a separate step and remains in the in-app browser's own persistent session.
 
 The previous `c` command is intentionally not part of this project.
+
+Aside browser tasks use MCP REPL by default. The Aside CLI provides guides, account/host management, shell scripting, explicit CLI operation, and a fallback when MCP is unavailable. A one-shot `aside repl "…"` closes its temporary session, so each invocation must reconnect to its target tab; a persistent MCP or interactive CLI REPL can retain bindings. CLI updates require an explicit request or existing authorization, even when another skill recommends automatic updates. This plugin supplies routing guidance; it does not install or configure Aside MCP.
 
 ## Repository layout
 
