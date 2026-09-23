@@ -103,12 +103,7 @@ For every feature, bug fix, refactor, or behavior change, load
 
 This is optional and is never written automatically by the plugin.
 
-For local plugin development, register this checkout instead:
-
-```bash
-codex plugin marketplace add /Users/seongho/projects/seongho/plugins/seongho-ops
-codex plugin add seongho-ops@seongho-ops
-```
+For plugin maintenance, follow [AGENTS.md](AGENTS.md). Keep the normal installation on the published Git marketplace, edit only source worktrees, and refresh/reinstall after publishing. Verify both the version and the complete packaged file contents. Do not edit installed caches or replace the normal marketplace with a development checkout; explicitly requested local experiments need an isolated installation.
 
 The packaged `plugins/seongho-ops/skills/argocd/` directory is the source of truth for Argo CD guidance. Any standalone copy under `~/.agents/skills/argocd/` is a legacy installed copy, not a durable source-edit target.
 
