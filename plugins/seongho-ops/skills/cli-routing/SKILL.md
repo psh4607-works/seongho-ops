@@ -1,6 +1,6 @@
 ---
 name: cli-routing
-description: Use before operational CLI work involving external services, auth, infrastructure, databases, deployment, observability, secrets, containers, browser QA, package/runtime management, AI coding tools, remote Git, state-changing Git, or the bundled k port cleanup command; also use for Aside Browser interaction and Jev/TypeSafe judgments. Skip ordinary read-only local inspection. Load narrower matching skills afterward. Datadog and Sentry are CLI-only.
+description: Use before operational CLI work involving external services, Google Workspace or Gmail, auth, infrastructure, databases, deployment, observability, secrets, containers, browser QA, package/runtime management, AI coding tools, remote Git, state-changing Git, or the bundled k port cleanup command; also use for Aside Browser interaction and Jev/TypeSafe judgments. Skip ordinary read-only local inspection. Load narrower matching skills afterward. Datadog and Sentry are CLI-only.
 ---
 
 # CLI Routing
@@ -23,6 +23,10 @@ If an exempt investigation expands into service-facing, remote, package/runtime,
 6. For genuine missing or expired auth, read `references/auth-recovery.md` completely before login, OAuth, device-code, SSO, or browser-assisted recovery.
 
 Use purpose-built connectors and service skills for Slack, Linear, Figma, and ordinary Notion work unless the user requests a CLI.
+
+## Google Workspace
+
+Prefer `gog` (the `gogcli` executable) for Gmail and other supported Google Workspace tasks. Read [references/google-workspace.md](references/google-workspace.md) for account selection, authentication checks, and mail workflows. Preserve an explicitly requested tool such as `gws`.
 
 ## Aside Browser
 
