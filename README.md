@@ -23,6 +23,8 @@ Aside browser tasks use MCP REPL by default. The Aside CLI provides guides, acco
 
 Jev tasks load the official `typesafe-ai` skill before question design. One-off judgments use the connected `jev` MCP; shell scripts, batches, and account diagnostics use the `jev` CLI; repeatable application features use the official TypeSafe SDK. See the [Jev routing reference](plugins/seongho-ops/skills/cli-routing/references/jev.md).
 
+Google Workspace tasks prefer `gog`, the `gogcli` executable, for Gmail and other supported services. The route covers account selection, authentication checks, and draft versus send workflows while preserving an explicitly requested tool such as `gws`. See the [Google Workspace routing reference](plugins/seongho-ops/skills/cli-routing/references/google-workspace.md). The plugin provides guidance; install and authenticate `gogcli` separately.
+
 ## Repository layout
 
 ```text
@@ -35,6 +37,7 @@ plugins/seongho-ops/
     SKILL.md
     agents/openai.yaml
     references/routes.md
+    references/google-workspace.md
     references/aside.md
     references/jev.md
     references/auth-recovery.md
