@@ -1,11 +1,11 @@
 ---
 name: cli-routing
-description: Use before operational CLI work or Aside Browser interaction involving external services, auth, infrastructure, databases, deployment, observability, secrets, containers, browser QA, package/runtime management, AI coding tools, remote Git, state-changing Git, or the bundled k port cleanup command. Skip ordinary read-only local inspection. Load narrower matching skills afterward. Datadog and Sentry are CLI-only.
+description: Use before operational CLI work involving external services, auth, infrastructure, databases, deployment, observability, secrets, containers, browser QA, package/runtime management, AI coding tools, remote Git, state-changing Git, or the bundled k port cleanup command; also use for Aside Browser interaction and Jev/TypeSafe judgments. Skip ordinary read-only local inspection. Load narrower matching skills afterward. Datadog and Sentry are CLI-only.
 ---
 
 # CLI Routing
 
-Route operational work to the correct local CLI and Aside browser interaction to MCP REPL without taxing ordinary local inspection.
+Route operational work to the correct local CLI, Aside browser interaction to MCP REPL, and Jev judgments to the appropriate MCP, CLI, or SDK surface.
 
 ## Scope
 
@@ -16,7 +16,7 @@ If an exempt investigation expands into service-facing, remote, package/runtime,
 ## Required flow
 
 1. Classify the operation before choosing a command.
-2. For service-facing CLI work, read `references/routes.md` completely and follow its hard routes.
+2. For service-facing work, read `references/routes.md` completely and follow its hard routes.
 3. Load narrower matching skills afterward, especially `argocd` and `supabase`.
 4. Use `command -v` and the narrowest `--help` when the installed command or syntax has not been proven in the current turn.
 5. Diagnose read-only first, execute only the requested scope, and verify mutations when practical.
@@ -27,6 +27,10 @@ Use purpose-built connectors and service skills for Slack, Linear, Figma, and or
 ## Aside Browser
 
 When the user names Aside, asks about its open tabs, or requests an Aside CLI update, read [references/aside.md](references/aside.md). Prefer Aside MCP REPL for browser inspection and interaction. Use the CLI for guides, management, shell scripts, explicit CLI requests, and fallback when MCP is unavailable. Aside is a separate browser; do not interpret its tab list as the Codex app's side panel. Preserve an explicitly requested browser and the service routes in `references/routes.md`.
+
+## Jev / TypeSafe
+
+When working with Jev or integrating TypeSafe, read [references/jev.md](references/jev.md). Load the official `typesafe-ai` skill before designing questions. Use the connected `jev` MCP for one-off judgments, the CLI for shell and batch work or account diagnostics, and the official TypeSafe SDK for repeatable application features.
 
 ## Bundled utility
 

@@ -4,7 +4,7 @@
 
 ## What it adds
 
-- `seongho-ops:cli-routing`: selects purpose-built local CLIs for external services, authentication, infrastructure, databases, deployment, observability, browser QA, runtimes, AI coding tools, and state-changing Git work; prefers Aside MCP REPL for Aside browser interaction.
+- `seongho-ops:cli-routing`: selects purpose-built local CLIs for external services, authentication, infrastructure, databases, deployment, observability, browser QA, runtimes, AI coding tools, and state-changing Git work; prefers Aside MCP REPL for Aside browser interaction and routes Jev/TypeSafe work to MCP, CLI, or SDK.
 - `seongho-ops:argocd`: owns the durable Argo CD CLI guidance, including SSO recovery and exact Application capability probes that keep Kubernetes, project, and Application RBAC separate.
 - `seongho-ops:vercel-preview-browser`: uses the authenticated Vercel CLI to obtain a deployment-protection cookie and injects it into the Codex in-app browser through its permitted CDP capability.
 - `seongho-ops:brainstorming`: resolves material design uncertainty before implementation while letting clear, reversible work proceed without a mandatory spec.
@@ -21,6 +21,8 @@ The previous `c` command is intentionally not part of this project.
 
 Aside browser tasks use MCP REPL by default. The Aside CLI provides guides, account/host management, shell scripting, explicit CLI operation, and a fallback when MCP is unavailable. A one-shot `aside repl "…"` closes its temporary session, so each invocation must reconnect to its target tab; a persistent MCP or interactive CLI REPL can retain bindings. CLI updates require an explicit request or existing authorization, even when another skill recommends automatic updates. This plugin supplies routing guidance; it does not install or configure Aside MCP.
 
+Jev tasks load the official `typesafe-ai` skill before question design. One-off judgments use the connected `jev` MCP; shell scripts, batches, and account diagnostics use the `jev` CLI; repeatable application features use the official TypeSafe SDK. See the [Jev routing reference](plugins/seongho-ops/skills/cli-routing/references/jev.md).
+
 ## Repository layout
 
 ```text
@@ -34,6 +36,7 @@ plugins/seongho-ops/
     agents/openai.yaml
     references/routes.md
     references/aside.md
+    references/jev.md
     references/auth-recovery.md
     scripts/k
   skills/argocd/
