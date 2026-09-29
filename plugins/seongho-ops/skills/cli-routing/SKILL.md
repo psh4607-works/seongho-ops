@@ -24,6 +24,8 @@ If an exempt investigation expands into service-facing, remote, package/runtime,
 
 Use purpose-built connectors and service skills for Slack, Linear, Figma, and ordinary Notion work unless the user requests a CLI.
 
+Prefer the `orca-cli` skill when operating Orca-managed worktrees, terminals, or the embedded browser.
+
 ## Google Workspace
 
 Prefer `gog` (the `gogcli` executable) for Gmail and other supported Google Workspace tasks. Read [references/google-workspace.md](references/google-workspace.md) for account selection, authentication checks, and mail workflows. Preserve an explicitly requested tool such as `gws`.
