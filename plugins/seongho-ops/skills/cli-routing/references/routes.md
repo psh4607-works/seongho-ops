@@ -16,6 +16,7 @@ Read this reference completely before selecting a CLI for service-facing, remote
 | Aside Browser | Aside MCP REPL, `aside` | Read [aside.md](aside.md). Prefer MCP REPL for tabs and browser interaction; use the CLI for guides, management, shell scripts, explicit CLI requests, and MCP connection fallback. Preserve the same browser/account/host when switching. REPL directly controls the browser; `exec` delegates to Aside's agent. Update the CLI only when authorized. |
 | Browser QA | `playwright` | Follow global browser routing; rendered state requires a supported browser path. |
 | Runtimes | repository package manager, `python3`/`uv`, `cargo`, JDK tools | Respect lockfiles and repository toolchains. INF Gradle/Kotlin work may require JDK 21. |
+| VS Code | `code`, `vscode-terminal` | Read [vscode.md](vscode.md). Use `code` for windows/files/extensions and `vscode-terminal` for integrated terminal sessions. Discover the bridge window and select its ID before terminal operations; do not treat `code --status` as terminal output or execution status. |
 | AI coding | `codex`, `claude`, `gemini`, `opencode`, `cursor-agent` | Keep conversational work interactive. Reserve `codex exec` for bounded disposable work. |
 | Jev / TypeSafe | Jev MCP, `jev`, official TypeSafe SDK | Read [jev.md](jev.md) and load `typesafe-ai` before question design. Use connected MCP for one-off judgments, CLI for shell/batch/auth work, and the official SDK for repeatable application features. |
 
