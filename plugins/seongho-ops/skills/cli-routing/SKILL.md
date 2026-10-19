@@ -1,6 +1,6 @@
 ---
 name: cli-routing
-description: Use before operational CLI work involving external services, Google Workspace or Gmail, auth, infrastructure, databases, deployment, observability, secrets, containers, browser QA, package/runtime management, AI coding tools, remote Git, state-changing Git, or the bundled k port cleanup command; also use for Aside Browser interaction and Jev/TypeSafe judgments. Skip ordinary read-only local inspection. Load narrower matching skills afterward. Datadog and Sentry are CLI-only.
+description: Use before operational CLI work involving external services, Google Workspace or Gmail, auth, infrastructure, databases, deployment, observability, secrets, containers, browser QA, package/runtime management, AI coding tools, VS Code windows or integrated terminals, remote Git, state-changing Git, or the bundled k port cleanup command; also use for Aside Browser interaction and Jev/TypeSafe judgments. Skip ordinary read-only local inspection. Load narrower matching skills afterward. Datadog and Sentry are CLI-only.
 ---
 
 # CLI Routing
@@ -25,6 +25,10 @@ If an exempt investigation expands into service-facing, remote, package/runtime,
 Use purpose-built connectors and service skills for Slack, Linear, Figma, and ordinary Notion work unless the user requests a CLI.
 
 Prefer the `orca-cli` skill when operating Orca-managed worktrees, terminals, or the embedded browser.
+
+## VS Code
+
+For VS Code windows, files, extensions, or integrated terminal sessions, read [references/vscode.md](references/vscode.md). Use the built-in `code` CLI for editor/window and extension operations, and `vscode-terminal` for terminal discovery, creation, execution, output, and lifecycle control. Prefer these CLIs before desktop UI automation; keep Orca-managed terminals on the `orca-cli` route.
 
 ## Google Workspace
 

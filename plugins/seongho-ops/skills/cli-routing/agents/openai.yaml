@@ -1,7 +1,7 @@
 interface:
   display_name: "CLI Routing"
-  short_description: "Route operational CLIs, Aside browsers, and Jev judgments"
-  default_prompt: "Use $seongho-ops:cli-routing to select and verify the right CLI, Aside MCP REPL, or Jev/TypeSafe interface for this task."
+  short_description: "Route CLIs, VS Code terminals, Aside, and Jev"
+  default_prompt: "Use $seongho-ops:cli-routing to select and verify the right CLI, VS Code terminal bridge, Aside MCP REPL, or Jev/TypeSafe interface for this task."
 
 policy:
   allow_implicit_invocation: true
