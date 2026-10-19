@@ -4,7 +4,7 @@
 
 ## What it adds
 
-- `seongho-ops:cli-routing`: selects purpose-built local CLIs for external services, authentication, infrastructure, databases, deployment, observability, browser QA, runtimes, AI coding tools, and state-changing Git work; prefers Aside MCP REPL for Aside browser interaction and routes Jev/TypeSafe work to MCP, CLI, or SDK.
+- `seongho-ops:cli-routing`: selects purpose-built local CLIs for external services, authentication, infrastructure, databases, deployment, observability, browser QA, runtimes, AI coding tools, VS Code windows and terminals, and state-changing Git work; prefers Aside MCP REPL for Aside browser interaction and routes Jev/TypeSafe work to MCP, CLI, or SDK.
 - `seongho-ops:argocd`: owns the durable Argo CD CLI guidance, including SSO recovery and exact Application capability probes that keep Kubernetes, project, and Application RBAC separate.
 - `seongho-ops:vercel-preview-browser`: uses the authenticated Vercel CLI to obtain a deployment-protection cookie and injects it into the Codex in-app browser through its permitted CDP capability.
 - `seongho-ops:brainstorming`: resolves material design uncertainty before implementation while letting clear, reversible work proceed without a mandatory spec.
@@ -25,6 +25,8 @@ Jev tasks load the official `typesafe-ai` skill before question design. One-off 
 
 Google Workspace tasks prefer `gog`, the `gogcli` executable, for Gmail and other supported services. The route covers account selection, authentication checks, and draft versus send workflows while preserving an explicitly requested tool such as `gws`. See the [Google Workspace routing reference](plugins/seongho-ops/skills/cli-routing/references/google-workspace.md). The plugin provides guidance; install and authenticate `gogcli` separately.
 
+VS Code tasks use the built-in `code` CLI for files, windows, and extensions, and the separately installed `vscode-terminal` bridge for integrated terminal discovery, execution, output, and lifecycle control. See the [VS Code routing reference](plugins/seongho-ops/skills/cli-routing/references/vscode.md). This plugin supplies guidance; it does not bundle or automatically install the bridge.
+
 ## Repository layout
 
 ```text
@@ -37,6 +39,7 @@ plugins/seongho-ops/
     SKILL.md
     agents/openai.yaml
     references/routes.md
+    references/vscode.md
     references/google-workspace.md
     references/aside.md
     references/jev.md
