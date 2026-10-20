@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import test from 'node:test';
@@ -74,6 +74,32 @@ test('cli-routing keeps hard routes and auth recovery in lazy references', async
   assert.match(routes, /Datadog[\s\S]*Hard route/);
   assert.match(routes, /Sentry[\s\S]*Hard route/);
   assert.match(auth, /# CLI Authentication Recovery/);
+});
+
+test('1Password routing resolves to a packaged, implicitly discoverable skill', async () => {
+  const manifest = await readJson(path.join(pluginRoot, '.codex-plugin', 'plugin.json'));
+  const skillRoot = path.resolve(pluginRoot, manifest.skills, '1password');
+  const target = path.join(skillRoot, 'SKILL.md');
+  const skill = await readFile(target, 'utf8');
+  const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
+
+  assert.match(skill, /^---\nname: 1password\n/);
+  assert.match(agent, /allow_implicit_invocation: true/);
+
+  const routingRoot = path.resolve(pluginRoot, manifest.skills, 'cli-routing');
+  for (const relative of ['SKILL.md', 'references/routes.md', 'references/auth-recovery.md']) {
+    const document = path.join(routingRoot, relative);
+    const markdown = await readFile(document, 'utf8');
+    const links = [...markdown.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)]
+      .map((match) => match[1])
+      .filter((href) => href.startsWith('.'));
+    const resolved = links.map((href) => path.resolve(path.dirname(document), href));
+
+    assert.ok(resolved.includes(target), `${relative} must route to the packaged 1Password skill`);
+    for (const linkedFile of resolved) {
+      assert.ok((await stat(linkedFile)).isFile(), `${document} has a broken link: ${linkedFile}`);
+    }
+  }
 });
 
 test('Argo CD guidance scopes RBAC decisions to the exact API capability', async () => {

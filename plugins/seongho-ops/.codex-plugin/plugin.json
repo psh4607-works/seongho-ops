@@ -1,7 +1,7 @@
 {
   "name": "seongho-ops",
   "version": "0.6.7",
-  "description": "Guides design, debugging, verification, TDD, measured performance, and Argo CD operations; routes operational CLIs; opens protected previews; and packages Seongho's port cleanup utility.",
+  "description": "Guides development and Argo CD operations; routes operational CLIs; reuses 1Password CLI sessions; opens protected previews; and packages Seongho's port cleanup utility.",
   "author": {
     "name": "Seongho",
     "url": "https://github.com/psh4607"
@@ -20,13 +20,14 @@
     "performance",
     "benchmarking",
     "profiling",
-    "argocd"
+    "argocd",
+    "1password"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Seongho Ops",
     "shortDescription": "Guide development work and Argo CD operations; route operational CLIs; open previews; and provide k.",
-    "longDescription": "Seongho Ops provides lightweight, implicitly invocable brainstorming, systematic debugging, completion verification, test-driven development, performance engineering, and Argo CD operations skills. It separates Kubernetes, Argo CD project, and Argo CD Application RBAC; selects the correct authenticated local CLI; securely opens protected Vercel previews in the Codex browser; and bundles the k command for force-stopping processes that own explicitly requested local ports.",
+    "longDescription": "Seongho Ops provides lightweight, implicitly invocable brainstorming, systematic debugging, completion verification, test-driven development, performance engineering, Argo CD operations, and 1Password skills. It separates Kubernetes, Argo CD project, and Argo CD Application RBAC; selects the correct authenticated local CLI; reuses task terminal sessions for 1Password access to reduce repeated biometric prompts; securely opens protected Vercel previews in the Codex browser; and bundles the k command for force-stopping processes that own explicitly requested local ports.",
     "developerName": "Seongho",
     "category": "Developer Tools",
     "capabilities": [
@@ -41,7 +42,8 @@
       "Test-driven development",
       "Performance engineering",
       "Performance measurement and profiling",
-      "Argo CD operations"
+      "Argo CD operations",
+      "1Password CLI session reuse"
     ],
     "websiteURL": "https://github.com/psh4607/seongho-ops",
     "brandColor": "#4F70E8",
@@ -57,7 +59,8 @@
       "Debug this failure from evidence before proposing a fix.",
       "Check the exact Argo CD Application capability without conflating Kubernetes or project RBAC.",
       "Implement this code change with test-driven development.",
-      "Measure this bottleneck and meet its performance target without guessing."
+      "Measure this bottleneck and meet its performance target without guessing.",
+      "Reuse the authorized terminal session for this 1Password CLI task."
     ]
   }
 }
