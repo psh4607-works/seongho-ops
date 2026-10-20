@@ -90,14 +90,15 @@ test('1Password routing resolves to a packaged, implicitly discoverable skill', 
   for (const relative of ['SKILL.md', 'references/routes.md', 'references/auth-recovery.md']) {
     const document = path.join(routingRoot, relative);
     const markdown = await readFile(document, 'utf8');
-    const links = [...markdown.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)]
-      .map((match) => match[1])
-      .filter((href) => href.startsWith('.'));
+    const links = [...markdown.matchAll(/\[[^\]]+\]\(([^)\s]+)[^)]*\)/g)]
+      .map((match) => match[1].split('#')[0])
+      .filter((href) => href && !href.startsWith('/') && !/^[a-z][a-z0-9+.-]*:/i.test(href));
     const resolved = links.map((href) => path.resolve(path.dirname(document), href));
 
     assert.ok(resolved.includes(target), `${relative} must route to the packaged 1Password skill`);
     for (const linkedFile of resolved) {
-      assert.ok((await stat(linkedFile)).isFile(), `${document} has a broken link: ${linkedFile}`);
+      const info = await stat(linkedFile).catch(() => null);
+      assert.ok(info?.isFile(), `${document} has a broken link: ${linkedFile}`);
     }
   }
 });
