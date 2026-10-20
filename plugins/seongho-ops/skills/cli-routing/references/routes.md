@@ -12,7 +12,8 @@ Read this reference completely before selecting a CLI for service-facing, remote
 | Sentry | `sentry` | Hard route: never use a Sentry connector, MCP, or old plugin. Use `sentry-cli` only for legacy compatibility and never pass `--show-token`. |
 | OpenSearch | `opensearch-cli` | Use the configured profile and inspect subcommand help. |
 | Deploy / cloud | `vercel`, `databricks`, `aws`, `gcloud`, `cloudflared` | Select project, profile, region, and environment explicitly when needed. For a protected `*.vercel.app` preview in the Codex in-app browser, load `seongho-ops:vercel-preview-browser` and the bundled Browser skill. |
-| Secrets / containers | `vault`, `op`, `docker`, `docker compose` | Check session or daemon status without exposing secrets. |
+| 1Password | `op` | Load [the 1Password skill](../../1password/SKILL.md), including for op-backed wrappers. Reuse one live task terminal and batch required access; avoid redundant authentication probes. |
+| Secrets / containers | `vault`, `docker`, `docker compose` | Check session or daemon status without exposing secrets. |
 | Aside Browser | Aside MCP REPL, `aside` | Read [aside.md](aside.md). Prefer MCP REPL for tabs and browser interaction; use the CLI for guides, management, shell scripts, explicit CLI requests, and MCP connection fallback. Preserve the same browser/account/host when switching. REPL directly controls the browser; `exec` delegates to Aside's agent. Update the CLI only when authorized. |
 | Browser QA | `playwright` | Follow global browser routing; rendered state requires a supported browser path. |
 | Runtimes | repository package manager, `python3`/`uv`, `cargo`, JDK tools | Respect lockfiles and repository toolchains. INF Gradle/Kotlin work may require JDK 21. |

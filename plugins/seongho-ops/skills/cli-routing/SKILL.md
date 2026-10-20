@@ -26,6 +26,10 @@ Use purpose-built connectors and service skills for Slack, Linear, Figma, and or
 
 Prefer the `orca-cli` skill when operating Orca-managed worktrees, terminals, or the embedded browser.
 
+## 1Password
+
+Before using `op` or a wrapper that retrieves 1Password secrets, load [the 1Password skill](../1password/SKILL.md). Reuse the task's live terminal session, group required secret access, and avoid redundant sign-in or status probes that can trigger biometric prompts. The skill owns expiry, recovery, and unattended-access guidance.
+
 ## VS Code
 
 For VS Code windows, files, extensions, or integrated terminal sessions, read [references/vscode.md](references/vscode.md). Use the built-in `code` CLI for editor/window and extension operations, and `vscode-terminal` for terminal discovery, creation, execution, output, and lifecycle control. Prefer these CLIs before desktop UI automation; keep Orca-managed terminals on the `orca-cli` route.

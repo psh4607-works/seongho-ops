@@ -6,6 +6,7 @@
 
 - `seongho-ops:cli-routing`: selects purpose-built local CLIs for external services, authentication, infrastructure, databases, deployment, observability, browser QA, runtimes, AI coding tools, VS Code windows and terminals, and state-changing Git work; prefers Aside MCP REPL for Aside browser interaction and routes Jev/TypeSafe work to MCP, CLI, or SDK.
 - `seongho-ops:argocd`: owns the durable Argo CD CLI guidance, including SSO recovery and exact Application capability probes that keep Kubernetes, project, and Application RBAC separate.
+- `seongho-ops:1password`: reuses a task's authorized terminal session, groups required secret access, and avoids redundant sign-ins when using `op` or op-backed wrappers. CLI routing loads this skill before access; 1Password's own authorization expiry still applies.
 - `seongho-ops:vercel-preview-browser`: uses the authenticated Vercel CLI to obtain a deployment-protection cookie and injects it into the Codex in-app browser through its permitted CDP capability.
 - `seongho-ops:brainstorming`: resolves material design uncertainty before implementation while letting clear, reversible work proceed without a mandatory spec.
 - `seongho-ops:verification-before-completion`: requires fresh, claim-sized evidence before completion reports, commits, pushes, pull requests, handoffs, or moving to the next task.
@@ -46,6 +47,9 @@ plugins/seongho-ops/
     references/auth-recovery.md
     scripts/k
   skills/argocd/
+    SKILL.md
+    agents/openai.yaml
+  skills/1password/
     SKILL.md
     agents/openai.yaml
   skills/vercel-preview-browser/

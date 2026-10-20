@@ -1,0 +1,6 @@
+interface:
+  display_name: "1Password"
+  short_description: "Reuse CLI sessions and reduce repeated biometric prompts"
+  default_prompt: "Use $1password to complete this secret-backed task while reusing its authorized terminal session."
+policy:
+  allow_implicit_invocation: true
