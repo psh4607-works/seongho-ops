@@ -14,6 +14,8 @@ Recover through the CLI vendor's official OAuth, device-code, SSO, OIDC, or logi
 
 ## Recovery state machine
 
+For `op` desktop integration, follow [the 1Password skill](../../1password/SKILL.md) instead of the generic login launch, browser, status-probe, and retry steps below: keep the existing task terminal and let the required operation request native authorization.
+
 1. **Detect**: run the original command once or use the router's safe status probe. Preserve the exact error.
 2. **Classify**: continue only for missing, invalid, revoked, or expired credentials/session. Stop and report other failure classes.
 3. **Discover**: inspect the installed CLI's exact login/auth help before constructing a command. Do not guess flags from memory.
@@ -56,7 +58,7 @@ Always re-check `--help` because installed versions can change.
 | `cloudflared` | `cloudflared tunnel login` | a minimized read-only tunnel list |
 | `vault` | Use the configured provider method, commonly `vault login -method=oidc`; never invent a method | `vault token lookup` with sensitive output suppressed |
 | `notion` | Inspect `notion auth login --help` and use its official flow | `notion auth status` |
-| `op` | `op signin` using the configured account | `op whoami` only when identity matters; otherwise a minimized account/session check |
+| `op` | Load [the 1Password skill](../../1password/SKILL.md). Preserve the task terminal; with desktop integration, let the needed operation request approval. Use `op signin` only when required by the configured authentication mode, never as a routine preflight | Retry the required operation in the same terminal; `op whoami` only when identity itself matters. Do not start another authorization while one is pending |
 
 ## Safe testing
 
