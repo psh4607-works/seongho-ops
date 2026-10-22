@@ -103,6 +103,33 @@ test('1Password routing resolves to a packaged, implicitly discoverable skill', 
   }
 });
 
+test('code-convention is discoverable with packaged references and a qualified invocation', async () => {
+  const manifest = await readJson(path.join(pluginRoot, '.codex-plugin', 'plugin.json'));
+  const skillRoot = path.resolve(pluginRoot, manifest.skills, 'code-convention');
+  const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
+  const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
+  const invocation = '$seongho-ops:code-convention';
+
+  assert.match(skill, /^---\nname: code-convention\n/);
+  assert.match(agent, /allow_implicit_invocation: true/);
+  assert.ok(agent.includes(invocation));
+  assert.ok(manifest.interface.defaultPrompt.some((prompt) => prompt.includes(invocation)));
+  assert.ok(manifest.interface.capabilities.includes('Code conventions and design-system consistency'));
+
+  const references = [...skill.matchAll(/\[[^\]]+\]\((references\/[^)\s]+)\)/g)]
+    .map((match) => match[1]);
+  assert.deepEqual([...new Set(references)].sort(), [
+    'references/react.md',
+    'references/typescript.md',
+  ]);
+  for (const reference of references) {
+    const target = path.resolve(skillRoot, reference);
+    assert.ok(target.startsWith(`${skillRoot}${path.sep}`), 'reference must stay inside the skill');
+    assert.ok((await stat(target)).isFile(), `${reference} must be packaged`);
+    assert.ok((await readFile(target, 'utf8')).trim().length > 0, `${reference} must not be empty`);
+  }
+});
+
 test('Argo CD guidance scopes RBAC decisions to the exact API capability', async () => {
   const routingRoot = path.join(pluginRoot, 'skills', 'cli-routing');
   const routes = await readFile(path.join(routingRoot, 'references', 'routes.md'), 'utf8');
