@@ -24,8 +24,8 @@ test('plugin manifest exposes the packaged skill directory', async () => {
   const packageJson = await readJson(path.join(root, 'package.json'));
 
   assert.equal(manifest.name, 'seongho-ops');
-  assert.equal(manifest.version, '0.6.7');
-  assert.equal(packageJson.version, '0.6.7');
+  assert.equal(manifest.version, '0.6.8');
+  assert.equal(packageJson.version, '0.6.8');
   assert.equal(manifest.skills, './skills/');
   assert.equal(manifest.interface.composerIcon, './assets/plugin-icon.svg');
   assert.equal(manifest.interface.logo, './assets/plugin-icon.svg');
@@ -100,6 +100,36 @@ test('1Password routing resolves to a packaged, implicitly discoverable skill', 
       const info = await stat(linkedFile).catch(() => null);
       assert.ok(info?.isFile(), `${document} has a broken link: ${linkedFile}`);
     }
+  }
+});
+
+test('code-convention is discoverable with packaged references and a qualified invocation', async () => {
+  const manifest = await readJson(path.join(pluginRoot, '.codex-plugin', 'plugin.json'));
+  const skillRoot = path.resolve(pluginRoot, manifest.skills, 'code-convention');
+  const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
+  const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
+  const invocation = `$${manifest.name}:code-convention`;
+
+  assert.match(skill, /^---\nname: code-convention\n/);
+  assert.match(agent, /allow_implicit_invocation: true/);
+  assert.ok(agent.includes(invocation));
+  assert.ok(manifest.interface.defaultPrompt.some((prompt) => prompt.includes(invocation)));
+  assert.ok(manifest.interface.capabilities.includes('Code conventions and design-system consistency'));
+
+  const references = [...skill.matchAll(/\[[^\]]+\]\(([^)\s]+)[^)]*\)/g)]
+    .map((match) => match[1].split('#')[0])
+    .filter((href) => href && !href.startsWith('/') && !/^[a-z][a-z0-9+.-]*:/i.test(href))
+    .map((href) => path.posix.normalize(href));
+  assert.deepEqual([...new Set(references)].sort(), [
+    'references/react.md',
+    'references/typescript.md',
+  ]);
+  for (const reference of references) {
+    const target = path.resolve(skillRoot, reference);
+    assert.ok(target.startsWith(`${skillRoot}${path.sep}`), 'reference must stay inside the skill');
+    const info = await stat(target).catch(() => null);
+    assert.ok(info?.isFile(), `${reference} must be packaged`);
+    assert.ok((await readFile(target, 'utf8')).trim().length > 0, `${reference} must not be empty`);
   }
 });
 
