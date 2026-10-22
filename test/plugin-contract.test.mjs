@@ -108,7 +108,7 @@ test('code-convention is discoverable with packaged references and a qualified i
   const skillRoot = path.resolve(pluginRoot, manifest.skills, 'code-convention');
   const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
   const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
-  const invocation = '$seongho-ops:code-convention';
+  const invocation = `$${manifest.name}:code-convention`;
 
   assert.match(skill, /^---\nname: code-convention\n/);
   assert.match(agent, /allow_implicit_invocation: true/);
@@ -116,8 +116,10 @@ test('code-convention is discoverable with packaged references and a qualified i
   assert.ok(manifest.interface.defaultPrompt.some((prompt) => prompt.includes(invocation)));
   assert.ok(manifest.interface.capabilities.includes('Code conventions and design-system consistency'));
 
-  const references = [...skill.matchAll(/\[[^\]]+\]\((references\/[^)\s]+)\)/g)]
-    .map((match) => match[1]);
+  const references = [...skill.matchAll(/\[[^\]]+\]\(([^)\s]+)[^)]*\)/g)]
+    .map((match) => match[1].split('#')[0])
+    .filter((href) => href && !href.startsWith('/') && !/^[a-z][a-z0-9+.-]*:/i.test(href))
+    .map((href) => path.posix.normalize(href));
   assert.deepEqual([...new Set(references)].sort(), [
     'references/react.md',
     'references/typescript.md',
@@ -125,7 +127,8 @@ test('code-convention is discoverable with packaged references and a qualified i
   for (const reference of references) {
     const target = path.resolve(skillRoot, reference);
     assert.ok(target.startsWith(`${skillRoot}${path.sep}`), 'reference must stay inside the skill');
-    assert.ok((await stat(target)).isFile(), `${reference} must be packaged`);
+    const info = await stat(target).catch(() => null);
+    assert.ok(info?.isFile(), `${reference} must be packaged`);
     assert.ok((await readFile(target, 'utf8')).trim().length > 0, `${reference} must not be empty`);
   }
 });
