@@ -387,3 +387,29 @@ test('performance engineering skill is scoped and progressively disclosed', asyn
   );
   assert.match(database, /live\s+production[\s\S]*impact controls/i);
 });
+
+test('write-korean packages its independent rulebook, attribution and qualified invocation', async () => {
+  const manifest = await readJson(path.join(pluginRoot, '.codex-plugin', 'plugin.json'));
+  const skillRoot = path.resolve(pluginRoot, manifest.skills, 'write-korean');
+  const skill = await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
+  const agent = await readFile(path.join(skillRoot, 'agents', 'openai.yaml'), 'utf8');
+  const invocation = `$${manifest.name}:write-korean`;
+  assert.match(skill, /^---\nname: write-korean\n/);
+  assert.match(agent, /allow_implicit_invocation: true/);
+  assert.ok(agent.includes(invocation));
+  assert.ok(manifest.interface.defaultPrompt.some((prompt) => prompt.includes(invocation)));
+  assert.ok(manifest.interface.capabilities.includes('Korean writing and selective polishing'));
+
+  for (const name of ['SKILL.md', 'references/korean-polishing.md', 'NOTICE.md', 'LICENSE']) {
+    const file = path.join(skillRoot, name);
+    const content = await readFile(file, 'utf8');
+    assert.ok(content.trim().length > 0, `${name} must not be empty`);
+    for (const match of content.matchAll(/\[[^\]]+\]\(([^)\s]+)[^)]*\)/g)) {
+      const href = match[1].split('#')[0];
+      if (!href || /^[a-z][a-z0-9+.-]*:/i.test(href)) continue;
+      const target = path.resolve(path.dirname(file), href);
+      assert.ok(target.startsWith(`${skillRoot}${path.sep}`), 'reference must stay inside the skill');
+      assert.ok((await stat(target)).isFile(), `${href} must be packaged`);
+    }
+  }
+});
