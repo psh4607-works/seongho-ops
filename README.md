@@ -4,6 +4,8 @@
 
 ## What it adds
 
+- `seongho-ops:write-korean`: writes Korean in the user’s voice, then selectively polishes awkward phrasing while preserving meaning, uncertainty, and the requested output format. Uses optional `write-like-me` style retrieval and bundled MIT-licensed polishing rules adapted from Humanize KR; a separate `humanize-korean` installation is not needed. Given-text polishing skips style retrieval.
+
 - `seongho-ops:cli-routing`: selects purpose-built local CLIs for external services, authentication, infrastructure, databases, deployment, observability, browser QA, runtimes, AI coding tools, VS Code windows and terminals, and state-changing Git work; prefers Aside MCP REPL for Aside browser interaction and routes Jev/TypeSafe work to MCP, CLI, or SDK.
 - `seongho-ops:argocd`: owns the durable Argo CD CLI guidance, including SSO recovery and exact Application capability probes that keep Kubernetes, project, and Application RBAC separate.
 - `seongho-ops:1password`: reuses a task's authorized terminal session, groups required secret access, and avoids redundant sign-ins when using `op` or op-backed wrappers. CLI routing loads this skill before access; 1Password's own authorization expiry still applies.
@@ -29,6 +31,19 @@ Google Workspace tasks prefer `gog`, the `gogcli` executable, for Gmail and othe
 
 VS Code tasks use the built-in `code` CLI for files, windows, and extensions, and the separately installed `vscode-terminal` bridge for integrated terminal discovery, execution, output, and lifecycle control. See the [VS Code routing reference](plugins/seongho-ops/skills/cli-routing/references/vscode.md). This plugin supplies guidance; it does not bundle or automatically install the bridge.
 
+## Korean writing
+
+Use `$seongho-ops:write-korean` for Korean drafting in your voice or for polishing a supplied draft. Automatic selection remains model-driven; this skill is not a hook that intercepts every `write-like-me` invocation.
+
+Style matching can use the separately installed OpenAI Writing Style (`write-like-me`) plugin and its connected app when examples are needed; provided examples and draft-only editing do not require it. Polishing uses the bundled `references/korean-polishing.md`, adapted from `epoko77-ai/im-not-ai` v2.3.2 under MIT. The original `humanize-korean` skill is not a runtime dependency. See the packaged [attribution and modifications](plugins/seongho-ops/skills/write-korean/NOTICE.md) and [upstream MIT license](plugins/seongho-ops/skills/write-korean/LICENSE). No OpenAI source is bundled. It returns the finished text in the requested destination, without mandatory diagnostic files or grades.
+
+For consistent pairing, optionally add this instruction to your own `AGENTS.md`:
+
+```markdown
+한국어 글에 write-like-me를 적용할 때 seongho-ops:write-korean도 읽고,
+그 조합 스킬의 문체 보존·선별 윤문·출력 절차를 따른다.
+```
+
 ## Repository layout
 
 ```text
@@ -37,6 +52,12 @@ plugins/seongho-ops/
   .codex-plugin/plugin.json
   bin/k.js
   runtime/vercel-preview-iab.js
+  skills/write-korean/
+    SKILL.md
+    agents/openai.yaml
+    references/korean-polishing.md
+    NOTICE.md
+    LICENSE
   skills/cli-routing/
     SKILL.md
     agents/openai.yaml

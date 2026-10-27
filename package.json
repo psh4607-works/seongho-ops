@@ -1,7 +1,7 @@
 {
   "name": "seongho-ops",
-  "version": "0.6.8",
-  "description": "Code conventions, lightweight development process guidance, Argo CD operations, operational CLI utilities, CLI routing, and protected Vercel preview access for Codex.",
+  "version": "0.6.9",
+  "description": "Korean writing, code conventions, lightweight development process guidance, Argo CD operations, operational CLI utilities, CLI routing, and protected Vercel preview access for Codex.",
   "type": "module",
   "private": false,
   "license": "MIT",

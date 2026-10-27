@@ -1,0 +1,7 @@
+interface:
+  display_name: "Write Korean"
+  short_description: "사용자 문체를 살려 한국어 글을 작성하고 어색한 표현만 다듬기"
+  default_prompt: "Use $seongho-ops:write-korean to draft this Korean message in my writing style and polish it without changing its meaning."
+
+policy:
+  allow_implicit_invocation: true
