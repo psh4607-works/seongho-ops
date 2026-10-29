@@ -147,6 +147,22 @@ For plugin maintenance, follow [AGENTS.md](AGENTS.md). Keep the normal installat
 
 The packaged `plugins/seongho-ops/skills/argocd/` directory is the source of truth for Argo CD guidance. Any standalone copy under `~/.agents/skills/argocd/` is a legacy installed copy, not a durable source-edit target.
 
+## Private deployment configuration
+
+Store company-specific Argo CD target values in `~/.config/seongho-ops/private-config.json`, outside the Git checkout, with file permissions `0600`:
+
+```json
+{
+  "argocd": {
+    "server": "<ARGOCD_SERVER>",
+    "project": "<PROJECT>",
+    "appName": "<APP_NAME>"
+  }
+}
+```
+
+The values above are placeholders. Replace them only in the local private file. The Argo CD skill uses explicit task targets first and this file for missing target values; it does not assume a company server or treat configuration as authorization. Keep credentials in the project's existing secret-storage workflow. Files named `private-config.json` are also Git-ignored at any depth to protect against accidental copies into this repository.
+
 ## Safety
 
 `k` is intentionally forceful: it sends signal 9 and does not allow the target process to clean up. Use it only for explicitly supplied local ports and prefer a graceful application-specific stop when practical.

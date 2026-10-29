@@ -5,15 +5,21 @@ description: Use when working with Argo CD or the argocd CLI, especially app ins
 
 # Argo CD
 
+## Target Configuration
+
+Resolve `<ARGOCD_SERVER>`, `<PROJECT>`, and `<APP_NAME>` from explicit task context first. When a required target value is missing, read the corresponding `argocd.server`, `argocd.project`, or `argocd.appName` field from the local `~/.config/seongho-ops/private-config.json`. Use its project and application values only for its configured server; do not combine them with a different explicit server. If the required value is still unknown, ask for it before running a target-specific command. Replace placeholders before execution.
+
+Keep company-specific target values in that private file, outside the Git checkout, with permissions `0600`. Keep public skills and tests parameterized; do not print the complete private configuration or copy its values into public documents, commits, or PR text. Configuration identifies targets; verify authorization for each operation.
+
 ## Core Rule
 
-Always use SSO for the Dalpha Argo CD CLI session:
+Always use SSO for the intended Argo CD CLI session:
 
 ```bash
-argocd login deploy.bravo.dalpha.so --sso
+argocd login '<ARGOCD_SERVER>' --sso
 ```
 
-Do not use username/password login or manually supplied tokens unless the user explicitly asks for that path. Use `deploy.bravo.dalpha.so` when no other server is specified.
+Do not use username/password login or manually supplied tokens unless the user explicitly asks for that path. Resolve the server through the target configuration above; there is no built-in company default.
 
 ## Auth Recovery
 
@@ -46,21 +52,21 @@ Before declaring an Argo CD CLI application operation impossible because of RBAC
 2. Name the intended Application action and probe that exact Argo CD API capability:
 
    ```bash
-   argocd account can-i <action> applications '<project>/<app>'
+   argocd account can-i <action> applications '<PROJECT>/<APP_NAME>'
    ```
 
    Common probes include:
 
    ```bash
-   argocd account can-i get applications '<project>/<app>'
-   argocd account can-i update applications '<project>/<app>'
-   argocd account can-i sync applications '<project>/<app>'
+   argocd account can-i get applications '<PROJECT>/<APP_NAME>'
+   argocd account can-i update applications '<PROJECT>/<APP_NAME>'
+   argocd account can-i sync applications '<PROJECT>/<APP_NAME>'
    ```
 
 3. Probe project access separately only when the intended command needs it:
 
    ```bash
-   argocd account can-i get projects '<project>'
+   argocd account can-i get projects '<PROJECT>'
    ```
 
 4. Treat `kubectl auth can-i ...` only as evidence about the current Kubernetes identity and API path.
@@ -71,14 +77,14 @@ For read-only diagnosis, use any independently authorized command such as `app l
 
 ## Regression Scenario
 
-These results are consistent and must not be collapsed into one blanket denial:
+This hypothetical example describes no real account or environment. These results are consistent and must not be collapsed into one blanket denial:
 
 | Probe | Result | Meaning |
 | --- | --- | --- |
 | `kubectl auth can-i patch applications.argoproj.io -n argocd` | `no` | The Kubernetes identity cannot patch the Application CRD. |
-| `argocd account can-i get projects default` | `no` | The Argo CD identity cannot read the project resource. |
-| `argocd account can-i update applications 'default/oi-api-exp'` | `yes` | The Argo CD API authorizes editing the Application. |
-| `argocd account can-i sync applications 'default/oi-api-exp'` | `yes` | The Argo CD API authorizes syncing the Application. |
+| `argocd account can-i get projects '<PROJECT>'` | `no` | The Argo CD identity cannot read the project resource. |
+| `argocd account can-i update applications '<PROJECT>/<APP_NAME>'` | `yes` | The Argo CD API authorizes editing the Application. |
+| `argocd account can-i sync applications '<PROJECT>/<APP_NAME>'` | `yes` | The Argo CD API authorizes syncing the Application. |
 
 Conclusion: Application update and sync remain available through the Argo CD API even though Kubernetes mutation and Argo CD project reads are denied. A successful UI manifest edit is supporting evidence for the Application update capability, not evidence that Kubernetes RBAC changed.
 
@@ -87,8 +93,8 @@ Conclusion: Application update and sync remain available through the Argo CD API
 After an authorized mutation, verify with the narrowest independently permitted Argo CD surface. For deployments, do not stop at the write:
 
 ```bash
-argocd app sync <app-name>
-argocd app wait <app-name>
+argocd app sync '<APP_NAME>'
+argocd app wait '<APP_NAME>'
 ```
 
 Use accessible history, manifests, resources, or runtime checks when `app get` is RBAC-limited. Report exactly which verification surfaces succeeded and which remained denied.
