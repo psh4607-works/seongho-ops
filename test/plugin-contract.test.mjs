@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile, stat } from 'node:fs/promises';
+import { readFile, readdir, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import test from 'node:test';
@@ -205,6 +205,10 @@ test('Argo CD target instructions agree with the private configuration example',
   const configurationPath = readme.match(/`(~\/[^`]+\/private-config\.json)`/)?.[1];
   assert.ok(configurationPath, 'keep the documented private configuration outside the checkout');
   assert.ok(skill.includes(`\`${configurationPath}\``));
+  const documentedFiles = new Set([
+    path.basename(configurationPath),
+    ...(await readdir(pluginRoot, { recursive: true })).map((file) => path.basename(file)),
+  ]);
 
   for (const [document, markdown] of [['Argo CD skill', skill], ['auth recovery', auth]]) {
     const commands = markdown.replace(/\\\r?\n[ \t]*/g, ' ');
@@ -234,8 +238,16 @@ test('Argo CD target instructions agree with the private configuration example',
     ]);
     const concreteHosts = [...markdown.matchAll(/\b(?:[a-z0-9-]+\.)+[a-z]{2,}\b/gi)]
       .map((match) => match[0])
-      .filter((token) => !publicIdentifiers.has(token) && !/\.(?:md|json|ya?ml|js|ts)$/i.test(token));
+      .filter((token) => !publicIdentifiers.has(token) && !documentedFiles.has(token));
     assert.deepEqual(concreteHosts, [], `${document} must not publish a concrete host`);
+    const addressLiterals = [
+      /\b\d{1,3}(?:\.\d{1,3}){3}\b/g,
+      /\b[a-z][a-z0-9-]*:\d+\b/gi,
+      /\[[a-f0-9:.]*:[a-f0-9:.]+\](?::\d+)?/gi,
+    ];
+    for (const pattern of addressLiterals) {
+      assert.deepEqual([...markdown.matchAll(pattern)], [], `${document} must not publish an address literal`);
+    }
   }
 });
 
