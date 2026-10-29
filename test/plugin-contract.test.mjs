@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { readFile, readdir, stat } from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
+import { readFile, stat } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -292,11 +293,11 @@ test('Argo CD target instructions agree with the private configuration example',
   }
 });
 
-test('published markdown excludes locally configured private target values', async (t) => {
+test('tracked text excludes locally configured private target values', async (t) => {
   const privateFile = path.join(homedir(), '.config', 'seongho-ops', 'private-config.json');
   const privateText = await readFile(privateFile, 'utf8').catch((error) => {
     if (error.code === 'ENOENT') return null;
-    throw new Error('Cannot read the local private target configuration');
+    throw new Error(`Cannot read the local private target configuration (${error.code})`, { cause: error });
   });
   if (privateText === null) return t.skip('Local private target configuration is not present');
   let configuration;
@@ -313,18 +314,24 @@ test('published markdown excludes locally configured private target values', asy
     .filter((value) => typeof value === 'string' && value.trim() && !/^<[^>]+>$/.test(value))
     .map((value) => value.toLowerCase());
   if (!privateValues.length) return t.skip('No concrete private target values are configured');
-  const publishedMarkdown = [
-    path.join(root, 'README.md'),
-    path.join(root, 'AGENTS.md'),
-    ...(await readdir(pluginRoot, { recursive: true }))
-      .filter((file) => file.endsWith('.md'))
-      .map((file) => path.join(pluginRoot, file)),
-  ];
-  for (const file of publishedMarkdown) {
-    const text = (await readFile(file, 'utf8')).toLowerCase();
+  const privatePatterns = privateValues.map((value) => {
+    const escaped = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return new RegExp(`(?<![a-z0-9-])${escaped}(?![a-z0-9-])`, 'i');
+  });
+  const trackedFiles = execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8' })
+    .split('\0')
+    .filter(Boolean);
+  for (const relative of trackedFiles) {
+    const contents = await readFile(path.join(root, relative));
+    if (contents.includes(0)) continue;
+    const text = contents.toString('utf8');
+    const safePath = privatePatterns.reduce(
+      (value, pattern) => value.replace(new RegExp(pattern.source, 'gi'), '[private]'),
+      relative,
+    );
     assert.ok(
-      privateValues.every((value) => !text.includes(value)),
-      'Published markdown contains a locally configured private target value',
+      privatePatterns.every((pattern) => !pattern.test(text)),
+      `${safePath} contains a locally configured private target value`,
     );
   }
 });
