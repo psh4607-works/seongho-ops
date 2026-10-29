@@ -183,6 +183,35 @@ test('Argo CD guidance scopes RBAC decisions to the exact API capability', async
   assert.match(skill, /Application update and sync remain available/i);
 });
 
+test('Argo CD target instructions agree with the private configuration example', async () => {
+  const readme = await readFile(path.join(root, 'README.md'), 'utf8');
+  const skill = await readFile(path.join(pluginRoot, 'skills', 'argocd', 'SKILL.md'), 'utf8');
+  const auth = await readFile(
+    path.join(pluginRoot, 'skills', 'cli-routing', 'references', 'auth-recovery.md'),
+    'utf8',
+  );
+  const example = [...readme.matchAll(/```json\r?\n([\s\S]*?)\r?\n```/g)]
+    .map((match) => JSON.parse(match[1]))
+    .find((configuration) => configuration.argocd);
+  assert.ok(example, 'document a private Argo CD configuration example');
+
+  const fields = [...skill.matchAll(/`argocd\.([A-Za-z][A-Za-z0-9]*)`/g)]
+    .map((match) => match[1]);
+  assert.deepEqual([...new Set(fields)].sort(), Object.keys(example.argocd).sort());
+  const configurationPath = readme.match(/`(~\/[^`]+\/private-config\.json)`/)?.[1];
+  assert.ok(configurationPath, 'keep the documented private configuration outside the checkout');
+  assert.ok(skill.includes(`\`${configurationPath}\``));
+
+  for (const [document, markdown] of [['Argo CD skill', skill], ['auth recovery', auth]]) {
+    const logins = [...markdown.matchAll(/\bargocd login\s+([^\s`]+)([^\n`]*)/g)];
+    assert.ok(logins.length > 0, `${document} must document login`);
+    for (const [, server, options] of logins) {
+      assert.equal(server, "'<ARGOCD_SERVER>'", `${document} must not publish a concrete login host`);
+      assert.ok(options.split(/\s+/).includes('--sso'), `${document} must retain SSO login`);
+    }
+  }
+});
+
 test('package and skill wrapper expose only k', async () => {
   const packageJson = await readJson(path.join(root, 'package.json'));
   const wrapper = await readFile(
