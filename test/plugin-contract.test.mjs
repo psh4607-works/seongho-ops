@@ -214,6 +214,20 @@ test('Argo CD target instructions agree with the private configuration example',
       assert.equal(server, "'<ARGOCD_SERVER>'", `${document} must not publish a concrete login host`);
       assert.ok(options.split(/\s+/).includes('--sso'), `${document} must retain SSO login`);
     }
+    const targetArguments = [
+      /\bargocd app (?:sync|wait|get|diff)[ \t]+([^\s`]+)/g,
+      /\bargocd account can-i[ \t]+\S+[ \t]+(?:applications|projects)[ \t]+([^\s`]+)/g,
+      /--server(?:[ \t]+|=)([^\s`]+)/g,
+    ];
+    for (const pattern of targetArguments) {
+      for (const [, target] of commands.matchAll(pattern)) {
+        assert.match(
+          target,
+          /^'<[A-Z][A-Z0-9_]*>(?:\/<[A-Z][A-Z0-9_]*>)?'$/,
+          `${document} must not publish a concrete command target`,
+        );
+      }
+    }
   }
 });
 
