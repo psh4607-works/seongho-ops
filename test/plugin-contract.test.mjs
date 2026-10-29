@@ -215,9 +215,9 @@ test('Argo CD target instructions agree with the private configuration example',
       assert.ok(options.split(/\s+/).includes('--sso'), `${document} must retain SSO login`);
     }
     const targetArguments = [
-      /\bargocd app (?:sync|wait|get|diff)[ \t]+([^\s`]+)/g,
+      /\bargocd app [a-z-]+[ \t]+([^\s`-][^\s`]*)/g,
       /\bargocd account can-i[ \t]+\S+[ \t]+(?:applications|projects)[ \t]+([^\s`]+)/g,
-      /--server(?:[ \t]+|=)([^\s`]+)/g,
+      /--(?:server|project|app|grpc-web-root-path)(?:[ \t]+|=)([^\s`]+)/g,
     ];
     for (const pattern of targetArguments) {
       for (const [, target] of commands.matchAll(pattern)) {
@@ -228,6 +228,14 @@ test('Argo CD target instructions agree with the private configuration example',
         );
       }
     }
+    const publicIdentifiers = new Set([
+      'applications.argoproj.io',
+      ...Object.keys(example.argocd).map((field) => `argocd.${field}`),
+    ]);
+    const concreteHosts = [...markdown.matchAll(/\b(?:[a-z0-9-]+\.)+[a-z]{2,}\b/gi)]
+      .map((match) => match[0])
+      .filter((token) => !publicIdentifiers.has(token) && !/\.(?:md|json|ya?ml|js|ts)$/i.test(token));
+    assert.deepEqual(concreteHosts, [], `${document} must not publish a concrete host`);
   }
 });
 
