@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import { readFile, stat } from 'node:fs/promises';
+import { homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import test from 'node:test';
@@ -24,8 +26,8 @@ test('plugin manifest exposes the packaged skill directory', async () => {
   const packageJson = await readJson(path.join(root, 'package.json'));
 
   assert.equal(manifest.name, 'seongho-ops');
-  assert.equal(manifest.version, '0.6.9');
-  assert.equal(packageJson.version, '0.6.9');
+  assert.equal(manifest.version, '0.6.10');
+  assert.equal(packageJson.version, '0.6.10');
   assert.equal(manifest.skills, './skills/');
   assert.equal(manifest.interface.composerIcon, './assets/plugin-icon.svg');
   assert.equal(manifest.interface.logo, './assets/plugin-icon.svg');
@@ -154,7 +156,7 @@ test('Argo CD guidance scopes RBAC decisions to the exact API capability', async
 
   assert.match(
     skill,
-    /argocd account can-i <action> applications '<project>\/<app>'/,
+    /argocd account can-i <action> applications '<PROJECT>\/<APP_NAME>'/,
   );
   assert.match(
     skill,
@@ -165,22 +167,173 @@ test('Argo CD guidance scopes RBAC decisions to the exact API capability', async
     /`kubectl auth can-i` denial[\s\S]*must not be generalized[\s\S]*Argo CD API denial/i,
   );
 
-  // Regression: the 2026-08-05 <APP_NAME> incident had denied Kubernetes and
-  // project reads while the Argo CD API still allowed Application mutations.
+  // A hypothetical example keeps Kubernetes and project denials separate from
+  // Application permissions without publishing a real target or incident.
   assert.match(
     skill,
     /`kubectl auth can-i patch applications\.argoproj\.io -n argocd`[\s\S]*`no`/i,
   );
-  assert.match(skill, /`argocd account can-i get projects default`[\s\S]*`no`/i);
+  assert.match(skill, /`argocd account can-i get projects '<PROJECT>'`[\s\S]*`no`/i);
   assert.match(
     skill,
-    /`argocd account can-i update applications 'default\/<APP_NAME>'`[\s\S]*`yes`/i,
+    /`argocd account can-i update applications '<PROJECT>\/<APP_NAME>'`[\s\S]*`yes`/i,
   );
   assert.match(
     skill,
-    /`argocd account can-i sync applications 'default\/<APP_NAME>'`[\s\S]*`yes`/i,
+    /`argocd account can-i sync applications '<PROJECT>\/<APP_NAME>'`[\s\S]*`yes`/i,
   );
   assert.match(skill, /Application update and sync remain available/i);
+});
+
+test('Argo CD target instructions agree with the private configuration example', async () => {
+  const readme = await readFile(path.join(root, 'README.md'), 'utf8');
+  const skill = await readFile(path.join(pluginRoot, 'skills', 'argocd', 'SKILL.md'), 'utf8');
+  const auth = await readFile(
+    path.join(pluginRoot, 'skills', 'cli-routing', 'references', 'auth-recovery.md'),
+    'utf8',
+  );
+  const routingRoot = path.join(pluginRoot, 'skills', 'cli-routing');
+  const documents = [
+    {
+      file: path.join(pluginRoot, 'skills', 'argocd', 'SKILL.md'),
+      markdown: skill,
+      requiresLogin: true,
+      publicTokens: ['applications.argoproj.io', 'private-config.json'],
+    },
+    {
+      file: path.join(routingRoot, 'references', 'auth-recovery.md'),
+      markdown: auth,
+      requiresLogin: true,
+      publicTokens: ['SKILL.md'],
+    },
+    {
+      file: path.join(routingRoot, 'SKILL.md'),
+      markdown: await readFile(path.join(routingRoot, 'SKILL.md'), 'utf8'),
+      publicTokens: ['SKILL.md', 'aside.md', 'auth-recovery.md', 'google-workspace.md', 'jev.md', 'k.js', 'routes.md', 'vscode.md'],
+    },
+    {
+      file: path.join(routingRoot, 'references', 'routes.md'),
+      markdown: await readFile(path.join(routingRoot, 'references', 'routes.md'), 'utf8'),
+      publicTokens: ['SKILL.md', 'aside.md', 'google-workspace.md', 'jev.md', 'vercel.app', 'vscode.md'],
+    },
+    {
+      file: path.join(root, 'README.md'),
+      markdown: readme,
+      publicTokens: [
+        'AGENTS.md', 'NOTICE.md', 'SKILL.md', 'aside.md', 'auth-recovery.md',
+        'backend.md', 'database.md', 'frontend.md', 'google-workspace.md', 'jev.md',
+        'k.js', 'k.ts', 'korean-polishing.md', 'marketplace.json', 'measurement.md',
+        'openai.yaml', 'plugin.json', 'private-config.json', 'react.md', 'routes.md',
+        'typescript.md', 'vercel-preview-iab.js', 'vercel-preview-iab.ts', 'vscode.md',
+      ],
+    },
+    {
+      file: path.join(root, 'AGENTS.md'),
+      markdown: await readFile(path.join(root, 'AGENTS.md'), 'utf8'),
+      publicTokens: ['github.com', 'package.json', 'plugin.json', 'private-config.json', 'seongho-ops.git'],
+    },
+  ];
+  const exampleBlock = [...readme.matchAll(/```json\r?\n([\s\S]*?)\r?\n```/g)]
+    .find((match) => /"argocd"[ \t]*:/.test(match[1]));
+  assert.ok(exampleBlock, 'document a private Argo CD configuration example');
+  const example = JSON.parse(exampleBlock[1]);
+  assert.ok(example?.argocd && typeof example.argocd === 'object');
+  for (const value of Object.values(example.argocd)) {
+    assert.equal(typeof value, 'string', 'public target examples must use string placeholders');
+    assert.match(value, /^<[A-Z][A-Z0-9_]*>$/, 'public target examples must use placeholders');
+  }
+
+  const fields = [...skill.matchAll(/`argocd\.([A-Za-z][A-Za-z0-9]*)`/g)]
+    .map((match) => match[1]);
+  assert.deepEqual([...new Set(fields)].sort(), Object.keys(example.argocd).sort());
+  const configurationPath = readme.match(/`(~\/[^`]+\/private-config\.json)`/)?.[1];
+  assert.ok(configurationPath, 'keep the documented private configuration outside the checkout');
+  assert.ok(skill.includes(`\`${configurationPath}\``));
+
+  // Public symbols and filenames are reviewed per document; new package files
+  // and links must not silently weaken the address check.
+  for (const { file: document, markdown, requiresLogin, publicTokens } of documents) {
+    const commands = markdown.replace(/\\\r?\n[ \t]*/g, ' ');
+    const logins = [...commands.matchAll(/\bargocd login[ \t]+([^\s`]+)([^\n`]*)/g)];
+    if (requiresLogin) assert.ok(logins.length > 0, `${document} must document login`);
+    for (const [, server, options] of logins) {
+      assert.equal(server, "'<ARGOCD_SERVER>'", `${document} must not publish a concrete login host`);
+      assert.ok(options.split(/\s+/).includes('--sso'), `${document} must retain SSO login`);
+    }
+    const targetArguments = [
+      /\bargocd app [a-z-]+[ \t]+([^\s`-][^\s`]*)/g,
+      /\bargocd account can-i[ \t]+\S+[ \t]+(?:applications|projects)[ \t]+([^\s`]+)/g,
+      /--(?:server|project|app|grpc-web-root-path)(?:[ \t]+|=)([^\s`]+)/g,
+    ];
+    for (const pattern of targetArguments) {
+      for (const [, target] of commands.matchAll(pattern)) {
+        assert.match(
+          target,
+          /^'<[A-Z][A-Z0-9_]*>(?:\/<[A-Z][A-Z0-9_]*>)?'$/,
+          `${document} must not publish a concrete command target`,
+        );
+      }
+    }
+    const publicIdentifiers = new Set([
+      ...publicTokens,
+      ...Object.keys(example.argocd).map((field) => `argocd.${field}`),
+    ]);
+    const concreteHosts = [...markdown.matchAll(/\b(?:[a-z0-9-]+\.)+[a-z]{2,}\b/gi)]
+      .map((match) => match[0])
+      .filter((token) => !publicIdentifiers.has(token));
+    assert.deepEqual(concreteHosts, [], `${document} must not publish a concrete host`);
+    const addressLiterals = [
+      /\b\d{1,3}(?:\.\d{1,3}){3}\b/g,
+      /\b[a-z][a-z0-9-]*:\d+\b/gi,
+      /\[[a-f0-9:.]*:[a-f0-9:.]+\](?::\d+)?/gi,
+    ];
+    for (const pattern of addressLiterals) {
+      assert.deepEqual([...markdown.matchAll(pattern)], [], `${document} must not publish an address literal`);
+    }
+  }
+});
+
+test('tracked text excludes locally configured private target values', async (t) => {
+  const privateFile = path.join(homedir(), '.config', 'seongho-ops', 'private-config.json');
+  const privateText = await readFile(privateFile, 'utf8').catch((error) => {
+    if (error.code === 'ENOENT') return null;
+    throw new Error(`Cannot read the local private target configuration (${error.code})`, { cause: error });
+  });
+  if (privateText === null) return t.skip('Local private target configuration is not present');
+  let configuration;
+  try {
+    configuration = JSON.parse(privateText);
+  } catch {
+    assert.fail('Local private target configuration must be valid JSON');
+  }
+  const privateFields = configuration?.argocd?.project === 'default'
+    ? ['server', 'appName']
+    : ['server', 'project', 'appName'];
+  const privateValues = privateFields
+    .map((field) => configuration?.argocd?.[field])
+    .filter((value) => typeof value === 'string' && value.trim() && !/^<[^>]+>$/.test(value))
+    .map((value) => value.toLowerCase());
+  if (!privateValues.length) return t.skip('No concrete private target values are configured');
+  const privatePatterns = privateValues.map((value) => {
+    const escaped = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return new RegExp(`(?<![a-z0-9-])${escaped}(?![a-z0-9-])`, 'i');
+  });
+  const trackedFiles = execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8' })
+    .split('\0')
+    .filter(Boolean);
+  for (const relative of trackedFiles) {
+    const contents = await readFile(path.join(root, relative));
+    if (contents.includes(0)) continue;
+    const text = contents.toString('utf8');
+    const safePath = privatePatterns.reduce(
+      (value, pattern) => value.replace(new RegExp(pattern.source, 'gi'), '[private]'),
+      relative,
+    );
+    assert.ok(
+      privatePatterns.every((pattern) => !pattern.test(text)),
+      `${safePath} contains a locally configured private target value`,
+    );
+  }
 });
 
 test('package and skill wrapper expose only k', async () => {

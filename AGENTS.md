@@ -37,3 +37,7 @@ For an authorized release, complete the remote publication and update this Mac's
 7. Report the published commit/PR, installed version, content-match result, and any remaining blocker. New Codex conversations pick up the new catalog; reinstalling does not prove existing conversations reloaded it.
 
 This is a task-time maintenance policy, not a background updater. It authorizes neither unrelated CLI upgrades nor changes to other plugin installations.
+
+## Private operational configuration
+
+Company-specific deployment addresses, project names, and application names belong in the local `~/.config/seongho-ops/private-config.json`, outside the Git checkout. Keep its permissions at `0600`. Public skills, tests, and publication text must use placeholders such as `<ARGOCD_SERVER>`, `<PROJECT>`, and `<APP_NAME>`. Keep credentials in the project's existing secret-storage workflow.

@@ -42,10 +42,12 @@ When Browser Use is selected, read the matching Browser skill before navigation.
 
 Always re-check `--help` because installed versions can change.
 
+Resolve Argo CD placeholders through the [Argo CD target configuration](../../argocd/SKILL.md#target-configuration) before starting login.
+
 | CLI/service | Official recovery route | Verification |
 | --- | --- | --- |
 | `gh` | `gh auth login --web` | `gh auth status`, then a minimal API call if needed |
-| `argocd` | `argocd login <ARGOCD_SERVER> --sso`; use `--sso-launch-browser=false` only when Browser Use must open the emitted URL | `argocd account get-user-info`; then retry the intended app command |
+| `argocd` | `argocd login '<ARGOCD_SERVER>' --sso`; use `--sso-launch-browser=false` only when Browser Use must open the emitted URL | `argocd account get-user-info`; then retry the intended app command |
 | `kubectl` | No universal login. Inspect the current context's exec credential provider and recover through its cloud/SSO CLI | `kubectl get --raw /version` and the intended read |
 | `supabase` | Inspect `supabase login --help`; use only its official supported credential flow | `supabase projects list --output-format json` |
 | `pup` | `pup auth login --read-only` for investigations, optionally with the intended site/org flags | `pup auth status`, then `pup --read-only ...` |

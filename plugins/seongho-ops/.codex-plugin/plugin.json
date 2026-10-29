@@ -1,6 +1,6 @@
 {
   "name": "seongho-ops",
-  "version": "0.6.9",
+  "version": "0.6.10",
   "description": "Applies code conventions; guides development and Argo CD operations; routes operational CLIs; reuses 1Password CLI sessions; opens protected previews; and packages Seongho's port cleanup utility. Composes Korean writing in the user’s voice with selective polishing.",
   "author": {
     "name": "Seongho",
