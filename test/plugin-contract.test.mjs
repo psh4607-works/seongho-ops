@@ -24,8 +24,8 @@ test('plugin manifest exposes the packaged skill directory', async () => {
   const packageJson = await readJson(path.join(root, 'package.json'));
 
   assert.equal(manifest.name, 'seongho-ops');
-  assert.equal(manifest.version, '0.6.9');
-  assert.equal(packageJson.version, '0.6.9');
+  assert.equal(manifest.version, '0.6.10');
+  assert.equal(packageJson.version, '0.6.10');
   assert.equal(manifest.skills, './skills/');
   assert.equal(manifest.interface.composerIcon, './assets/plugin-icon.svg');
   assert.equal(manifest.interface.logo, './assets/plugin-icon.svg');
@@ -154,7 +154,7 @@ test('Argo CD guidance scopes RBAC decisions to the exact API capability', async
 
   assert.match(
     skill,
-    /argocd account can-i <action> applications '<project>\/<app>'/,
+    /argocd account can-i <action> applications '<PROJECT>\/<APP_NAME>'/,
   );
   assert.match(
     skill,
@@ -165,20 +165,20 @@ test('Argo CD guidance scopes RBAC decisions to the exact API capability', async
     /`kubectl auth can-i` denial[\s\S]*must not be generalized[\s\S]*Argo CD API denial/i,
   );
 
-  // Regression: the 2026-08-05 <APP_NAME> incident had denied Kubernetes and
-  // project reads while the Argo CD API still allowed Application mutations.
+  // A hypothetical example keeps Kubernetes and project denials separate from
+  // Application permissions without publishing a real target or incident.
   assert.match(
     skill,
     /`kubectl auth can-i patch applications\.argoproj\.io -n argocd`[\s\S]*`no`/i,
   );
-  assert.match(skill, /`argocd account can-i get projects default`[\s\S]*`no`/i);
+  assert.match(skill, /`argocd account can-i get projects '<PROJECT>'`[\s\S]*`no`/i);
   assert.match(
     skill,
-    /`argocd account can-i update applications 'default\/<APP_NAME>'`[\s\S]*`yes`/i,
+    /`argocd account can-i update applications '<PROJECT>\/<APP_NAME>'`[\s\S]*`yes`/i,
   );
   assert.match(
     skill,
-    /`argocd account can-i sync applications 'default\/<APP_NAME>'`[\s\S]*`yes`/i,
+    /`argocd account can-i sync applications '<PROJECT>\/<APP_NAME>'`[\s\S]*`yes`/i,
   );
   assert.match(skill, /Application update and sync remain available/i);
 });
