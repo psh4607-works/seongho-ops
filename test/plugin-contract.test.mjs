@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { readFile, stat } from 'node:fs/promises';
+import { readFile, readdir, stat } from 'node:fs/promises';
+import { homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import test from 'node:test';
@@ -214,6 +215,22 @@ test('Argo CD target instructions agree with the private configuration example',
       markdown: await readFile(path.join(routingRoot, 'references', 'routes.md'), 'utf8'),
       publicTokens: ['SKILL.md', 'aside.md', 'google-workspace.md', 'jev.md', 'vercel.app', 'vscode.md'],
     },
+    {
+      file: path.join(root, 'README.md'),
+      markdown: readme,
+      publicTokens: [
+        'AGENTS.md', 'NOTICE.md', 'SKILL.md', 'aside.md', 'auth-recovery.md',
+        'backend.md', 'database.md', 'frontend.md', 'google-workspace.md', 'jev.md',
+        'k.js', 'k.ts', 'korean-polishing.md', 'marketplace.json', 'measurement.md',
+        'openai.yaml', 'plugin.json', 'private-config.json', 'react.md', 'routes.md',
+        'typescript.md', 'vercel-preview-iab.js', 'vercel-preview-iab.ts', 'vscode.md',
+      ],
+    },
+    {
+      file: path.join(root, 'AGENTS.md'),
+      markdown: await readFile(path.join(root, 'AGENTS.md'), 'utf8'),
+      publicTokens: ['github.com', 'package.json', 'plugin.json', 'private-config.json', 'seongho-ops.git'],
+    },
   ];
   const exampleBlock = [...readme.matchAll(/```json\r?\n([\s\S]*?)\r?\n```/g)]
     .find((match) => /"argocd"[ \t]*:/.test(match[1]));
@@ -272,6 +289,43 @@ test('Argo CD target instructions agree with the private configuration example',
     for (const pattern of addressLiterals) {
       assert.deepEqual([...markdown.matchAll(pattern)], [], `${document} must not publish an address literal`);
     }
+  }
+});
+
+test('published markdown excludes locally configured private target values', async (t) => {
+  const privateFile = path.join(homedir(), '.config', 'seongho-ops', 'private-config.json');
+  const privateText = await readFile(privateFile, 'utf8').catch((error) => {
+    if (error.code === 'ENOENT') return null;
+    throw new Error('Cannot read the local private target configuration');
+  });
+  if (privateText === null) return t.skip('Local private target configuration is not present');
+  let configuration;
+  try {
+    configuration = JSON.parse(privateText);
+  } catch {
+    assert.fail('Local private target configuration must be valid JSON');
+  }
+  const privateFields = configuration?.argocd?.project === 'default'
+    ? ['server', 'appName']
+    : ['server', 'project', 'appName'];
+  const privateValues = privateFields
+    .map((field) => configuration?.argocd?.[field])
+    .filter((value) => typeof value === 'string' && value.trim() && !/^<[^>]+>$/.test(value))
+    .map((value) => value.toLowerCase());
+  if (!privateValues.length) return t.skip('No concrete private target values are configured');
+  const publishedMarkdown = [
+    path.join(root, 'README.md'),
+    path.join(root, 'AGENTS.md'),
+    ...(await readdir(pluginRoot, { recursive: true }))
+      .filter((file) => file.endsWith('.md'))
+      .map((file) => path.join(pluginRoot, file)),
+  ];
+  for (const file of publishedMarkdown) {
+    const text = (await readFile(file, 'utf8')).toLowerCase();
+    assert.ok(
+      privateValues.every((value) => !text.includes(value)),
+      'Published markdown contains a locally configured private target value',
+    );
   }
 });
 
