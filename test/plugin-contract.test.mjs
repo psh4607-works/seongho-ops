@@ -192,10 +192,28 @@ test('Argo CD target instructions agree with the private configuration example',
   );
   const routingRoot = path.join(pluginRoot, 'skills', 'cli-routing');
   const documents = [
-    { file: path.join(pluginRoot, 'skills', 'argocd', 'SKILL.md'), markdown: skill, requiresLogin: true },
-    { file: path.join(routingRoot, 'references', 'auth-recovery.md'), markdown: auth, requiresLogin: true },
-    { file: path.join(routingRoot, 'SKILL.md'), markdown: await readFile(path.join(routingRoot, 'SKILL.md'), 'utf8') },
-    { file: path.join(routingRoot, 'references', 'routes.md'), markdown: await readFile(path.join(routingRoot, 'references', 'routes.md'), 'utf8') },
+    {
+      file: path.join(pluginRoot, 'skills', 'argocd', 'SKILL.md'),
+      markdown: skill,
+      requiresLogin: true,
+      publicTokens: ['applications.argoproj.io', 'private-config.json'],
+    },
+    {
+      file: path.join(routingRoot, 'references', 'auth-recovery.md'),
+      markdown: auth,
+      requiresLogin: true,
+      publicTokens: ['SKILL.md'],
+    },
+    {
+      file: path.join(routingRoot, 'SKILL.md'),
+      markdown: await readFile(path.join(routingRoot, 'SKILL.md'), 'utf8'),
+      publicTokens: ['SKILL.md', 'aside.md', 'auth-recovery.md', 'google-workspace.md', 'jev.md', 'k.js', 'routes.md', 'vscode.md'],
+    },
+    {
+      file: path.join(routingRoot, 'references', 'routes.md'),
+      markdown: await readFile(path.join(routingRoot, 'references', 'routes.md'), 'utf8'),
+      publicTokens: ['SKILL.md', 'aside.md', 'google-workspace.md', 'jev.md', 'vercel.app', 'vscode.md'],
+    },
   ];
   const exampleBlock = [...readme.matchAll(/```json\r?\n([\s\S]*?)\r?\n```/g)]
     .find((match) => /"argocd"[ \t]*:/.test(match[1]));
@@ -203,6 +221,7 @@ test('Argo CD target instructions agree with the private configuration example',
   const example = JSON.parse(exampleBlock[1]);
   assert.ok(example?.argocd && typeof example.argocd === 'object');
   for (const value of Object.values(example.argocd)) {
+    assert.equal(typeof value, 'string', 'public target examples must use string placeholders');
     assert.match(value, /^<[A-Z][A-Z0-9_]*>$/, 'public target examples must use placeholders');
   }
 
@@ -212,23 +231,10 @@ test('Argo CD target instructions agree with the private configuration example',
   const configurationPath = readme.match(/`(~\/[^`]+\/private-config\.json)`/)?.[1];
   assert.ok(configurationPath, 'keep the documented private configuration outside the checkout');
   assert.ok(skill.includes(`\`${configurationPath}\``));
-  const documentedFiles = new Set([path.basename(configurationPath)]);
-  for (const { file, markdown } of documents) {
-    const references = [
-      ...[...markdown.matchAll(/\[[^\]]+\]\(([^)\s]+)\)/g)].map((match) => match[1].split('#')[0]),
-      ...[...markdown.matchAll(/(?:references\/|bin\/)[\w./-]+\.(?:md|js)\b/g)].map((match) => match[0]),
-    ];
-    for (const reference of references.filter((value) => !/^[a-z][a-z0-9+.-]*:/i.test(value))) {
-      const target = reference.startsWith('bin/')
-        ? path.resolve(pluginRoot, reference)
-        : path.resolve(path.dirname(file), reference);
-      if ((await stat(target).catch(() => null))?.isFile()) {
-        documentedFiles.add(path.basename(target));
-      }
-    }
-  }
 
-  for (const { file: document, markdown, requiresLogin } of documents) {
+  // Public symbols and filenames are reviewed per document; new package files
+  // and links must not silently weaken the address check.
+  for (const { file: document, markdown, requiresLogin, publicTokens } of documents) {
     const commands = markdown.replace(/\\\r?\n[ \t]*/g, ' ');
     const logins = [...commands.matchAll(/\bargocd login[ \t]+([^\s`]+)([^\n`]*)/g)];
     if (requiresLogin) assert.ok(logins.length > 0, `${document} must document login`);
@@ -251,13 +257,12 @@ test('Argo CD target instructions agree with the private configuration example',
       }
     }
     const publicIdentifiers = new Set([
-      'applications.argoproj.io',
-      'vercel.app',
+      ...publicTokens,
       ...Object.keys(example.argocd).map((field) => `argocd.${field}`),
     ]);
     const concreteHosts = [...markdown.matchAll(/\b(?:[a-z0-9-]+\.)+[a-z]{2,}\b/gi)]
       .map((match) => match[0])
-      .filter((token) => !publicIdentifiers.has(token) && !documentedFiles.has(token));
+      .filter((token) => !publicIdentifiers.has(token));
     assert.deepEqual(concreteHosts, [], `${document} must not publish a concrete host`);
     const addressLiterals = [
       /\b\d{1,3}(?:\.\d{1,3}){3}\b/g,
