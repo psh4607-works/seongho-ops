@@ -190,10 +190,14 @@ test('Argo CD target instructions agree with the private configuration example',
     path.join(pluginRoot, 'skills', 'cli-routing', 'references', 'auth-recovery.md'),
     'utf8',
   );
-  const example = [...readme.matchAll(/```json\r?\n([\s\S]*?)\r?\n```/g)]
-    .map((match) => JSON.parse(match[1]))
-    .find((configuration) => configuration.argocd);
-  assert.ok(example, 'document a private Argo CD configuration example');
+  const exampleBlock = [...readme.matchAll(/```json\r?\n([\s\S]*?)\r?\n```/g)]
+    .find((match) => /"argocd"[ \t]*:/.test(match[1]));
+  assert.ok(exampleBlock, 'document a private Argo CD configuration example');
+  const example = JSON.parse(exampleBlock[1]);
+  assert.ok(example?.argocd && typeof example.argocd === 'object');
+  for (const value of Object.values(example.argocd)) {
+    assert.match(value, /^<[A-Z][A-Z0-9_]*>$/, 'public target examples must use placeholders');
+  }
 
   const fields = [...skill.matchAll(/`argocd\.([A-Za-z][A-Za-z0-9]*)`/g)]
     .map((match) => match[1]);
@@ -203,7 +207,8 @@ test('Argo CD target instructions agree with the private configuration example',
   assert.ok(skill.includes(`\`${configurationPath}\``));
 
   for (const [document, markdown] of [['Argo CD skill', skill], ['auth recovery', auth]]) {
-    const logins = [...markdown.matchAll(/\bargocd login\s+([^\s`]+)([^\n`]*)/g)];
+    const commands = markdown.replace(/\\\r?\n[ \t]*/g, ' ');
+    const logins = [...commands.matchAll(/\bargocd login[ \t]+([^\s`]+)([^\n`]*)/g)];
     assert.ok(logins.length > 0, `${document} must document login`);
     for (const [, server, options] of logins) {
       assert.equal(server, "'<ARGOCD_SERVER>'", `${document} must not publish a concrete login host`);
