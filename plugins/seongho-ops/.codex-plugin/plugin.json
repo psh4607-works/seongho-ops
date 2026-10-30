@@ -1,6 +1,6 @@
 {
   "name": "seongho-ops",
-  "version": "0.6.10",
+  "version": "0.6.11",
   "description": "Applies code conventions; guides development and Argo CD operations; routes operational CLIs; reuses 1Password CLI sessions; opens protected previews; and packages Seongho's port cleanup utility. Composes Korean writing in the user’s voice with selective polishing.",
   "author": {
     "name": "Seongho",
@@ -30,7 +30,7 @@
   "interface": {
     "displayName": "Seongho Ops",
     "shortDescription": "Guide development work and Argo CD operations; route operational CLIs; open previews; and provide k.",
-    "longDescription": "Seongho Ops provides lightweight, implicitly invocable brainstorming, systematic debugging, completion verification, test-driven development, performance engineering, Argo CD operations, and 1Password skills. It separates Kubernetes, Argo CD project, and Argo CD Application RBAC; selects the correct authenticated local CLI; reuses task terminal sessions for 1Password access to reduce repeated biometric prompts; securely opens protected Vercel previews in the Codex browser; and bundles the k command for force-stopping processes that own explicitly requested local ports. Its code-convention skill applies TypeScript/React naming, type safety, declarative code and refactoring guidance, preferring the project design system or a shared shadcn/ui layer when none exists. Its write-korean skill combines optional write-like-me style references and bundled MIT-licensed Korean polishing rules while preserving meaning and the requested output format.",
+    "longDescription": "Seongho Ops provides lightweight, implicitly invocable brainstorming, systematic debugging, completion verification, test-driven development, performance engineering, Argo CD operations, and 1Password skills. It separates Kubernetes, Argo CD project, and Argo CD Application RBAC; selects the correct authenticated local CLI; reuses task terminal sessions for 1Password access to reduce repeated biometric prompts; securely opens protected Vercel previews in the Codex browser; and bundles the k command for force-stopping processes that own explicitly requested local ports. Its code-convention skill applies language-neutral readability, responsibility boundaries and cohesive file organization without excessive fragmentation, with TypeScript/React and Kotlin/Compose references. Web design-system choices stay scoped to React. Its write-korean skill combines optional write-like-me style references and bundled MIT-licensed Korean polishing rules while preserving meaning and the requested output format.",
     "developerName": "Seongho",
     "category": "Developer Tools",
     "capabilities": [

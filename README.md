@@ -14,7 +14,7 @@
 - `seongho-ops:verification-before-completion`: requires fresh, claim-sized evidence before completion reports, commits, pushes, pull requests, handoffs, or moving to the next task.
 - `seongho-ops:systematic-debugging`: reproduces and traces failures, tests one falsifiable cause, and verifies the original symptom before accepting a fix.
 - `seongho-ops:test-driven-development`: requires a failing test before production code for features, bug fixes, refactors, and behavior changes.
-- `seongho-ops:code-convention`: consolidates TypeScript/React naming, type safety, declarative code, component/Hook refactoring, and anti-pattern guidance. It prefers the project design system; when none exists, it uses a shared shadcn/ui layer with consistent tokens, variants, and accessible headless primitives. Review-only requests remain read-only.
+- `seongho-ops:code-convention`: applies language-neutral readability, state ownership, responsibility boundaries and cohesive file organization without excessive fragmentation. TypeScript/React and Kotlin/Compose references preserve framework-specific behavior. Web design-system choices stay scoped to React; review-only requests remain read-only.
 - `seongho-ops:performance-engineering`: activates only for explicit performance work; it requires comparable end-to-end measurement, read-only frontend/backend/database triage, authorized mutation scope, and one measured bottleneck per cycle without default cache, index, or concurrency choices.
 - `k <port> [port...]`: finds listeners with `lsof` and sends `SIGKILL` to each matching process.
 - Lazy routing and authentication references so the entry skill stays focused.
