@@ -26,8 +26,8 @@ test('plugin manifest exposes the packaged skill directory', async () => {
   const packageJson = await readJson(path.join(root, 'package.json'));
 
   assert.equal(manifest.name, 'seongho-ops');
-  assert.equal(manifest.version, '0.6.10');
-  assert.equal(packageJson.version, '0.6.10');
+  assert.equal(manifest.version, '0.6.11');
+  assert.equal(packageJson.version, '0.6.11');
   assert.equal(manifest.skills, './skills/');
   assert.equal(manifest.interface.composerIcon, './assets/plugin-icon.svg');
   assert.equal(manifest.interface.logo, './assets/plugin-icon.svg');
@@ -123,6 +123,7 @@ test('code-convention is discoverable with packaged references and a qualified i
     .filter((href) => href && !href.startsWith('/') && !/^[a-z][a-z0-9+.-]*:/i.test(href))
     .map((href) => path.posix.normalize(href));
   assert.deepEqual([...new Set(references)].sort(), [
+    'references/kotlin-compose.md',
     'references/react.md',
     'references/typescript.md',
   ]);

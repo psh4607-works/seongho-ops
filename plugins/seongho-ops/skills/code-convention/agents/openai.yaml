@@ -1,6 +1,6 @@
 interface:
   display_name: "Code Convention"
-  short_description: "코드 컨벤션과 안티패턴, 디자인 시스템 일관성 적용"
-  default_prompt: "$seongho-ops:code-convention으로 대상 코드의 컨벤션과 안티패턴을 점검하고, 요청한 수정 범위에 적용해줘."
+  short_description: "언어 공통 가독성·책임 경계·파일 구성과 언어별 컨벤션 적용"
+  default_prompt: "$seongho-ops:code-convention으로 대상 코드의 가독성, 책임 경계와 과도한 분리 여부를 점검하고, 요청한 수정 범위에 적용해줘."
 policy:
   allow_implicit_invocation: true
