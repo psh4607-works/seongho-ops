@@ -1,0 +1,29 @@
+{
+  "name": "seongho-ops",
+  "displayName": "Seongho Ops",
+  "version": "0.6.11",
+  "description": "Applies code conventions; guides development and Argo CD operations; routes operational CLIs; reuses 1Password CLI sessions; and packages Seongho's port cleanup utility. Composes Korean writing in the user’s voice with selective polishing.",
+  "author": {
+    "name": "Seongho",
+    "url": "https://github.com/psh4607"
+  },
+  "homepage": "https://github.com/psh4607/seongho-ops",
+  "repository": "https://github.com/psh4607/seongho-ops",
+  "license": "MIT",
+  "keywords": [
+    "cli",
+    "operations",
+    "routing",
+    "developer-tools",
+    "tdd",
+    "testing",
+    "performance",
+    "benchmarking",
+    "profiling",
+    "argocd",
+    "1password",
+    "code-convention",
+    "design-system",
+    "korean-writing"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "seongho-ops",
+  "owner": {
+    "name": "Seongho",
+    "url": "https://github.com/psh4607"
+  },
+  "description": "Seongho's development-process and operational skills for Claude Code, linked from the Codex plugin source.",
+  "plugins": [
+    {
+      "name": "seongho-ops",
+      "source": "./claude/seongho-ops",
+      "category": "Developer Tools"
+    }
+  ]
+}

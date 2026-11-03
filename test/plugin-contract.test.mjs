@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { readFile, stat } from 'node:fs/promises';
+import { lstat, readFile, readlink, stat } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -323,7 +323,11 @@ test('tracked text excludes locally configured private target values', async (t)
     .split('\0')
     .filter(Boolean);
   for (const relative of trackedFiles) {
-    const contents = await readFile(path.join(root, relative));
+    const file = path.join(root, relative);
+    // 심링크의 대상은 따로 추적되어 스캔되므로 링크가 담은 경로 문자열만 검사한다
+    const contents = (await lstat(file)).isSymbolicLink()
+      ? Buffer.from(await readlink(file))
+      : await readFile(file);
     if (contents.includes(0)) continue;
     const text = contents.toString('utf8');
     const safePath = privatePatterns.reduce(
