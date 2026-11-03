@@ -48,6 +48,11 @@ For consistent pairing, optionally add this instruction to your own `AGENTS.md`:
 
 ```text
 .agents/plugins/marketplace.json
+.claude-plugin/marketplace.json
+claude/seongho-ops/
+  .claude-plugin/plugin.json
+  bin/k.js -> ../../../plugins/seongho-ops/bin/k.js
+  skills/<skill> -> ../../../plugins/seongho-ops/skills/<skill>
 plugins/seongho-ops/
   .codex-plugin/plugin.json
   bin/k.js
@@ -146,6 +151,21 @@ This is optional and is never written automatically by the plugin.
 For plugin maintenance, follow [AGENTS.md](AGENTS.md). Keep the normal installation on the published Git marketplace, edit only source worktrees, and refresh/reinstall after publishing. Verify both the version and the complete packaged file contents. Do not edit installed caches or replace the normal marketplace with a development checkout; explicitly requested local experiments need an isolated installation.
 
 The packaged `plugins/seongho-ops/skills/argocd/` directory is the source of truth for Argo CD guidance. Any standalone copy under `~/.agents/skills/argocd/` is a legacy installed copy, not a durable source-edit target.
+
+## Install in Claude Code
+
+This repository is also a Claude Code marketplace. In Claude Code, run:
+
+```text
+/plugin marketplace add psh4607/seongho-ops
+/plugin install seongho-ops@seongho-ops
+```
+
+From a shell, `claude plugin marketplace add psh4607/seongho-ops` and `claude plugin install seongho-ops@seongho-ops` do the same. Run `/reload-plugins` or start a new session to load the skills. They keep the Codex names, such as `seongho-ops:cli-routing`.
+
+The Codex plugin under `plugins/seongho-ops/` remains the source of truth. `claude/seongho-ops/` holds only the Claude manifest and relative symlinks: each `skills/<skill>` entry links to the matching Codex skill directory, and `bin/k.js` links to the built `k` command that `cli-routing` resolves from the plugin root. When Claude Code installs from the Git marketplace, it copies those link targets into its plugin cache, so the installed plugin contains no symlinks. Because `bin/` sits at the plugin root, Claude Code also puts `k.js` on the Bash tool's `PATH` while the plugin is enabled.
+
+`vercel-preview-browser` is not linked because it drives the Codex in-app browser. Every other Codex skill is linked. The repository tests require each new Codex skill to be linked or recorded as Codex-only, and keep the Claude manifest version equal to the Codex manifest version.
 
 ## Private deployment configuration
 

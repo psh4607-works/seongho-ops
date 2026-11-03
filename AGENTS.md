@@ -8,6 +8,7 @@ These instructions apply when maintaining this plugin, not whenever one of its s
 - Edit the source checkout or an isolated linked worktree. Never directly edit installed files under `~/.codex/plugins/cache/seongho-ops/`, marketplace snapshots under `~/.codex/.tmp/marketplaces/seongho-ops/`, or create a standalone skill copy to override the packaged skill.
 - The marketplace entry's `source: local` means a path inside its repository snapshot. Verify the installation's `marketplaceSource` is the Git repository above; do not confuse these two fields.
 - Keep the normal installation on the published release. Do not install an unpublished branch, local cachebuster, or local marketplace over it. Explicitly requested development installations must be isolated and identified as temporary.
+- `claude/seongho-ops/` is the Claude Code package. It holds only its manifest and relative symlinks into `plugins/seongho-ops/`. Edit skills in the Codex source; never copy skill files into the Claude package. Link a new skill there unless it depends on Codex-only tools, and record each exclusion in its tests.
 
 ## Check synchronization at the start
 
@@ -22,7 +23,7 @@ These instructions apply when maintaining this plugin, not whenever one of its s
 For an authorized release, complete the remote publication and update this Mac's normal installation in the same task. Do not report a remote-only release or local-only installation as complete. Respect an explicit read-only, local-only, no-push, or no-merge instruction; keep such work isolated and report the remaining synchronization step.
 
 1. Validate the scoped change. For executable changes, run the relevant tests and `pnpm test`; for skill/package changes, also validate the skill and plugin structure. Documentation-only changes need a diff/consistency review, not wording-matching tests.
-2. When packaged files change, advance the release version consistently in `package.json`, `plugins/seongho-ops/.codex-plugin/plugin.json`, and existing version assertions. Do not reuse a released version for different packaged contents. Root documentation-only changes do not require a plugin version bump.
+2. When packaged files change, advance the release version consistently in `package.json`, `plugins/seongho-ops/.codex-plugin/plugin.json`, `claude/seongho-ops/.claude-plugin/plugin.json`, and existing version assertions. Do not reuse a released version for different packaged contents. Root documentation-only changes do not require a plugin version bump.
 3. Follow the GitHub publishing skills, preserve hooks and attribution policy, and publish the reviewed change to `main` within the user's authorization. Surface material conflicts instead of resolving them silently. Verify the final remote commit and relevant checks.
 4. Refresh the Git marketplace, then install from it:
 
