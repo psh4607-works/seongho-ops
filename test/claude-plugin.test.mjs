@@ -99,6 +99,7 @@ test('Claude package resolves plugin-root resources used by linked skills', asyn
   });
 
   assert.equal(executed, link);
+  assert.ok((await stat(link)).isFile(), 'bin/k.js must resolve through the Claude package link');
 });
 
 test('Claude package holds only its manifest and symlinks', async () => {
