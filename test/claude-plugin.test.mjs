@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
-import { lstat, readFile, readdir, readlink, stat } from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
+import { lstat, mkdtemp, readFile, readdir, readlink, rm, stat, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import test from 'node:test';
@@ -83,14 +85,20 @@ test('Claude skills link every portable Codex skill without copies', async () =>
   }
 });
 
-test('Claude package resolves plugin-root resources used by linked skills', async () => {
+test('Claude package resolves plugin-root resources used by linked skills', async (t) => {
   const link = path.join(claudePluginRoot, 'bin', 'k.js');
   await assertRelativeLink(link, path.join(codexPluginRoot, 'bin', 'k.js'));
 
-  // cli-routing의 scripts/k는 스킬 위치에서 세 단계 위를 플러그인 루트로 본다
-  const wrapperRoot = path.resolve(claudePluginRoot, 'skills', 'cli-routing', 'scripts', '../../..');
-  assert.equal(wrapperRoot, claudePluginRoot);
-  assert.ok((await stat(path.join(wrapperRoot, 'bin', 'k.js'))).isFile());
+  // 가짜 node로 cli-routing의 scripts/k가 실행하려는 경로를 받아 Claude 패키지 루트 기준인지 확인한다
+  const fakeBin = await mkdtemp(path.join(tmpdir(), 'seongho-ops-node-'));
+  t.after(() => rm(fakeBin, { recursive: true, force: true }));
+  await writeFile(path.join(fakeBin, 'node'), '#!/bin/sh\nprintf "%s" "$1"\n', { mode: 0o755 });
+  const executed = execFileSync(path.join(claudePluginRoot, 'skills', 'cli-routing', 'scripts', 'k'), {
+    encoding: 'utf8',
+    env: { ...process.env, PATH: `${fakeBin}${path.delimiter}${process.env.PATH}` },
+  });
+
+  assert.equal(executed, link);
 });
 
 test('Claude package holds only its manifest and symlinks', async () => {
